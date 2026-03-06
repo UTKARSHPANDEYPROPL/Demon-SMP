@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEMON SMP | THE LIFESTEAL</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Orbitron:wght@400;900&family=Fira+Code:wght@400&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           CSS SYSTEM VARIABLES
+           ========================================= */
+        :root {
+            --main: #ff0000;
+            --gold: #ffcc00;
+            --dark: #000000;
+            --surface: #0a0a0a;
+            --glow: 0 0 20px rgba(255, 0, 0, 0.5);
+            --font-main: 'Rajdhani', sans-serif;
+            --font-tech: 'Orbitron', sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        /* =========================================
+           GLOBAL ARCHITECTURE & SCROLLBAR
+           ========================================= */
+        * {
+            cursor: crosshair;
+            box-sizing: border-box;
+            outline: none !important;
+        }
+
+        body {
+            background: var(--dark);
+            color: #ffffff;
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            margin: 0;
+            scroll-behavior: smooth;
+        }
+
+        /* CUSTOM GAMER SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+            border-left: 1px solid #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--main);
+            border-radius: 0px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff3333;
+        }
+
+        /* SCROLL REVEAL ANIMATIONS */
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease-out;
+        }
+        .reveal-element.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.4;
+            width: 100%;
+            height: 100%;
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+            z-index: 9999;
+            pointer-events: none;
+            background-size: 100% 4px;
+        }
+
+        /* =========================================
+           NAVIGATION
+           ========================================= */
+        .navbar {
+            background: rgba(0,0,0,0.95) !important;
+            border-bottom: 2px solid var(--main);
+            box-shadow: var(--glow);
+            z-index: 5000;
+            padding: 20px 0;
+        }
+
+        .navbar-brand {
+            font-family: 'Syncopate';
+            font-weight: 900;
+            letter-spacing: 5px;
+            color: #fff !important;
+            font-size: 1.5rem;
+        }
+
+        .navbar-brand span {
+            color: var(--main);
+            transition: 0.5s;
+        }
+
+        .nav-link {
+            font-family: var(--font-tech);
+            font-size: 0.7rem;
+            color: #fff !important;
+            margin-left: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+            color: var(--main) !important;
+        }
+
+        /* =========================================
+           HERO SECTION
+           ========================================= */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .server-logo {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 5px solid var(--main);
+            box-shadow: var(--glow);
+            margin-bottom: 40px;
+            animation: floatLogo 5s ease-in-out infinite;
+        }
+
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        h1 {
+            font-family: 'Syncopate';
+            font-size: clamp(3.5rem, 12vw, 8rem);
+            line-height: 0.8;
+            margin-bottom: 20px;
+        }
+
+        h1 span {
+            color: var(--main);
+            text-shadow: var(--glow);
+        }
+
+        .ip-container {
+            background: transparent;
+            border: 2px solid var(--main);
+            padding: 18px 50px;
+            font-family: var(--font-tech);
+            font-weight: 900;
+            margin-top: 50px;
+            cursor: pointer;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+        }
+
+        .ip-container:hover {
+            background: var(--main);
+            box-shadow: var(--glow);
+            transform: scale(1.1);
+        }
+
+        .status-badge {
+            font-family: var(--font-tech);
+            font-size: 1rem;
+            letter-spacing: 3px;
+            color: var(--main);
+            margin-top: 20px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px var(--main);
+        }
+
+        /* =========================================
+           LIVE SERVER FEED
+           ========================================= */
+        #live-feed-container {
+            position: fixed;
+            top: 120px;
+            left: 20px;
+            width: 300px;
+            height: 400px;
+            background: rgba(5, 5, 5, 0.85);
+            border: 1px solid #333;
+            border-left: 3px solid var(--main);
+            z-index: 4000;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .feed-header {
+            background: #111;
+            padding: 10px;
+            font-family: var(--font-tech);
+            font-size: 0.7rem;
+            color: var(--main);
+            letter-spacing: 2px;
+            border-bottom: 1px solid #222;
+        }
+
+        .feed-body {
+            padding: 15px;
+            flex-grow: 1;
+            overflow-y: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .feed-item {
+            font-family: var(--font-main);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: #ddd;
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feed-player { color: var(--gold); font-weight: 900; }
+        .feed-event { color: #fff; }
+        .feed-death { color: var(--main); }
+
+        /* =========================================
+           SHARED SECTIONS STYLING
+           ========================================= */
+        .section-title {
+            font-family: 'Syncopate';
+            font-size: 3rem;
+            color: var(--main);
+            margin: 120px 0 60px;
+            text-align: center;
+            letter-spacing: 12px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--main);
+        }
+
+        /* =========================================
+           THE LORE & VIDEO (FIXED)
+           ========================================= */
+        .video-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            border: 4px solid #111;
+            box-shadow: var(--glow);
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            background: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .lore-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #aaa;
+            text-align: center;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        /* =========================================
+           CLASSES / PATHS
+           ========================================= */
+        .class-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--main);
+            text-shadow: var(--glow);
+        }
+
+        .class-card {
+            background: rgba(10, 10, 10, 0.8);
+            border-top: 3px solid var(--main);
+            padding: 40px 20px;
+            text-align: center;
+            transition: 0.4s;
+            height: 100%;
+        }
+
+        .class-card:hover {
+            transform: translateY(-10px);
+            background: #111;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
+        }
+
+        /* =========================================
+           THE ARMORY (STORE)
+           ========================================= */
+        .demon-card {
+            background: var(--surface);
+            border: 1px solid #1a1a1a;
+            padding: 40px;
+            transition: 0.5s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            clip-path: polygon(0 0, 85% 0, 100% 15%, 100% 100%, 15% 100%, 0 85%);
+        }
+
+        .demon-card:hover {
+            border-color: var(--main);
+            transform: translateY(-15px);
+            background: #0f0505;
+            box-shadow: var(--glow);
+        }
+
+        .card-price {
+            font-size: 2.8rem;
+            color: var(--gold);
+            font-family: var(--font-tech);
+            font-weight: 900;
+            margin: 25px 0;
+        }
+
+        .purchase-button {
+            background: var(--main);
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            font-weight: 900;
+            font-family: var(--font-tech);
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+
+        .purchase-button:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* =========================================
+           WORLD ATLAS
+           ========================================= */
+        .map-placeholder {
+            width: 100%;
+            height: 500px;
+            background: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000') center/cover;
+            border: 2px solid var(--main);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--glow);
+        }
+
+        .map-placeholder::after {
+            content: '';
+            position: absolute;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.7);
+        }
+
+        .map-btn {
+            position: relative;
+            z-index: 2;
+            background: var(--main);
+            color: #fff;
+            padding: 20px 40px;
+            font-family: var(--font-tech);
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-decoration: none;
+            transition: 0.3s;
+            border: 1px solid #fff;
+        }
+
+        /* =========================================
+           LEADERBOARD
+           ========================================= */
+        .leaderboard-wrapper {
+            background: #050505;
+            border: 1px solid #222;
+            border-radius: 2px;
+            padding: 10px;
+        }
+
+        .leader-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 25px 50px;
+            border-bottom: 1px solid #111;
+            font-family: var(--font-tech);
+            transition: 0.3s;
+        }
+
+        .leader-row:hover {
+            background: #0a0a0a;
+            padding-left: 60px;
+            color: var(--main);
+        }
+
+        .leader-row.header {
+            background: var(--main);
+            color: #fff;
+            border: none;
+        }
+
+        .val-heart {
+            color: var(--gold);
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+        }
+
+        /* =========================================
+           RULES & CODE
+           ========================================= */
+        .rules-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .rule-card {
+            border-left: 4px solid var(--main);
+            padding: 30px;
+            background: #080808;
+            font-size: 1.1rem;
+        }
+
+        /* =========================================
+           FAQ / KNOWLEDGE BASE
+           ========================================= */
+        .faq-item {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            margin-bottom: 15px;
+        }
+
+        .faq-question {
+            padding: 25px;
+            font-family: var(--font-tech);
+            font-size: 1.1rem;
+            color: var(--main);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:hover {
+            background: #111;
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        .faq-answer.open {
+            padding: 0 25px 25px 25px;
+            max-height: 500px;
+        }
+
+        /* =========================================
+           FOOTER
+           ========================================= */
+        .master-footer {
+            background: #000;
+            border-top: 2px solid var(--main);
+            padding: 60px 0 20px;
+            margin-top: 100px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'Syncopate';
+            font-size: 2rem;
+            color: #fff;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo span { color: var(--main); }
+
+        .footer-links a {
+            color: #666;
+            margin: 0 15px;
+            text-decoration: none;
+            font-family: var(--font-tech);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--main);
+        }
+
+        /* =========================================
+           TERMINAL OS UI
+           ========================================= */
+        #ai-terminal {
+            position: fixed;
+            bottom: 120px;
+            right: 40px;
+            width: 600px;
+            height: 700px;
+            background: rgba(0, 0, 0, 0.98);
+            border: 2px solid var(--main);
+            display: none;
+            flex-direction: column;
+            z-index: 10000;
+            box-shadow: 0 0 60px #000;
+            backdrop-filter: blur(20px);
+        }
+
+        .terminal-header {
+            background: #0a0a0a;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #222;
+            font-family: var(--font-tech);
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .terminal-body {
+            flex-grow: 1;
+            padding: 25px;
+            overflow-y: auto;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            color: #00ff41;
+            line-height: 1.6;
+        }
+
+        .terminal-input-area {
+            padding: 25px;
+            background: #000;
+            display: flex;
+            border-top: 1px solid #111;
+            align-items: center;
+        }
+
+        .terminal-input-area input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            width: 100%;
+            outline: none;
+            font-family: var(--font-code);
+            font-size: 1rem;
+        }
+
+        /* GOLD ARCHITECT OVERRIDE */
+        .gold-mode {
+            --main: #ffcc00;
+            --glow: 0 0 40px rgba(255, 204, 0, 0.6);
+        }
+
+        .gold-mode .navbar-brand span {
+            color: var(--gold);
+        }
+
+        .gold-mode .terminal-body {
+            color: var(--gold);
+        }
+
+        /* =========================================
+           FLOATING INTERFACE
+           ========================================= */
+        #trigger-icon {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            background: var(--main);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 4px solid #fff;
+            z-index: 10001;
+            font-size: 2.5rem;
+            box-shadow: var(--glow);
+            transition: 0.5s;
+        }
+
+        #trigger-icon:hover {
+            transform: scale(1.15) rotate(360deg);
+        }
+
+        .discord-float {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            width: 70px;
+            height: 70px;
+            background: #5865F2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            box-shadow: 0 0 30px #5865F2;
+            transition: 0.4s;
+        }
+
+        .discord-float:hover {
+            transform: translateY(-10px);
+        }
+
+        /* MODAL */
+        .modal-content {
+            background: #000;
+            border: 3px solid var(--main);
+            color: #fff;
+            font-family: var(--font-tech);
+        }
+    </style>
+</head>
+<body id="master-body">
+
+<div class="scanline"></div>
+<canvas id="bg-canvas"></canvas>
+
+<div id="live-feed-container" class="d-none d-lg-flex">
+    <div class="feed-header">
+        LIVE SERVER LOG
+    </div>
+    <div class="feed-body" id="feed-logs">
+    </div>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">DEMON<span>SMP</span></a>
+        <div class="ms-auto d-flex align-items-center">
+            <a href="#lore" class="nav-link">LORE</a>
+            <a href="#classes" class="nav-link">PATHS</a>
+            <a href="#store" class="nav-link">ARMORY</a>
+            <a href="#atlas" class="nav-link">ATLAS</a>
+            <a href="#leaderboard" class="nav-link">SLAYERS</a>
+            <a href="#rules" class="nav-link">CODE</a>
+        </div>
+    </div>
+</nav>
+
+<section class="hero reveal-element">
+    <img src="Gemini_Generated_Image_ptljvptljvptljvp.png" class="server-logo" alt="Demon SMP Logo">
+
+    <h1 id="main-h1">DEMON <span>SMP</span></h1>
+
+    <div class="status-badge" id="online-status">CONNECTING TO CORE...</div>
+
+    <div class="ip-container" onclick="copyIP()">IN2.WAMMUHOST.COM:25978</div>
+    <div class="mt-4 small opacity-50" style="letter-spacing: 5px;">EST. 2024 // ARCHITECT UTKARSH</div>
+</section>
+
+<section id="lore" class="container py-5 reveal-element">
+    <h2 class="section-title">THE AWAKENING</h2>
+    <p class="lore-text">For centuries, the realm was at peace. But the Core has fractured. Demons spill from the void, and only the strongest bloodlines can survive the onslaught.</p>
+
+    <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/P6p7MInp6z4?autoplay=0&mute=1&controls=0&loop=1" title="Demon SMP Cinematic" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</section>
+
+<section id="classes" class="container py-5 reveal-element">
+    <h2 class="section-title">CHOOSE YOUR PATH</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="class-card">
+                <div class="class-icon">⚔️</div>
+                <h3 class="font-tech text-danger mb-3">VOID WARRIOR</h3>
+                <p class="opacity-75">Masters of close-quarters combat. High health, heavy armor, and devastating melee damage. They thrive in the blood moon.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="class-card">
+                <div class="class-icon">🔮</div>
+                <h3 class="font-tech text-danger mb-3">BLOOD MAGE</h3>
+                <p class="opacity-75">Wielders of forbidden arcane arts. They sacrifice their own vitality to cast explosive spells and summon demonic entities.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="class-card">
+                <div class="class-icon">🗡️</div>
+                <h3 class="font-tech text-danger mb-3">SHADOW ASSASSIN</h3>
+                <p class="opacity-75">Agile and lethal. They strike from the shadows with poisoned blades. Perfect for stealth raids.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="store" class="container py-5 reveal-element">
+    <h2 class="section-title">THE ARMORY</h2>
+    <div class="row g-5">
+        <div class="col-md-4">
+            <div class="demon-card">
+                <div>
+                    <span class="text-danger small font-tech">RANK_S</span>
+                    <h3>GOD RANK</h3>
+                    <p class="opacity-50 mt-2">Unlimited power. Access to /fly, /god, and private kits.</p>
+                </div>
+                <div>
+                    <div class="card-price">₹100</div>
+                    <button class="purchase-button" onclick="checkout()">PURCHASE</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="demon-card">
+                <div>
+                    <span class="text-danger small font-tech">RANK_A</span>
+                    <h3>ELITE RANK</h3>
+                    <p class="opacity-50 mt-2">Superior combat gear and specialized death messages.</p>
+                </div>
+                <div>
+                    <div class="card-price">₹75</div>
+                    <button class="purchase-button" onclick="checkout()">PURCHASE</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="demon-card">
+                <div>
+                    <span class="text-danger small font-tech">RANK_B</span>
+                    <h3>DEMONIC</h3>
+                    <p class="opacity-50 mt-2">The starting point for true survival legends.</p>
+                </div>
+                <div>
+                    <div class="card-price">₹50</div>
+                    <button class="purchase-button" onclick="checkout()">PURCHASE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="atlas" class="container py-5 reveal-element">
+    <h2 class="section-title">WORLD ATLAS</h2>
+    <div class="map-placeholder">
+        <a href="#" class="map-btn" onclick="alert('DYNMAP KERNEL NOT YET INITIALIZED.')">LAUNCH LIVE MAP</a>
+    </div>
+</section>
+
+<section id="leaderboard" class="container py-5 reveal-element">
+    <h2 class="section-title">TOP SLAYERS</h2>
+    <div class="leaderboard-wrapper">
+        <div class="leader-row header">
+            <span>WARRIOR NAME</span>
+            <span>BLOOD HEARTS</span>
+        </div>
+        <div class="leader-row">
+            <span>Hydra (Owner)</span>
+            <span class="val-heart">48</span>
+        </div>
+        <div class="leader-row">
+            <span>Aayush (Owner)</span>
+            <span class="val-heart">42</span>
+        </div>
+        <div class="leader-row">
+            <span>Utkarsh (Architect)</span>
+            <span class="val-heart">OVERFLOW</span>
+        </div>
+    </div>
+</section>
+
+<section id="rules" class="container py-5 reveal-element">
+    <h2 class="section-title">THE DEMON CODE</h2>
+    <div class="rules-grid">
+        <div class="rule-card">
+            <b>01 // ANTI-CHEAT:</b> Immediate HWID Ban. No appeals.
+        </div>
+        <div class="rule-card">
+            <b>02 // RESPECT:</b> Harassment = Mute.
+        </div>
+        <div class="rule-card">
+            <b>03 // GRIEFING:</b> Allowed in wilderness only.
+        </div>
+        <div class="rule-card">
+            <b>04 // EXPLOITS:</b> Use bugs = ban.
+        </div>
+    </div>
+</section>
+
+<section id="faq" class="container py-5 reveal-element">
+    <h2 class="section-title">KNOWLEDGE BASE</h2>
+    <div class="faq-container">
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <span>WHAT IS LIFESTEAL MECHANIC?</span>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                When you kill another player, you steal one of their hearts. If you lose all your hearts, you are banned for 24 hours.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <span>IS BEDROCK SUPPORTED?</span>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                Yes. Cross-play between Java and Bedrock editions is active.
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="master-footer reveal-element">
+    <div class="container">
+        <div class="footer-logo">DEMON<span>SMP</span></div>
+        <div class="footer-links mb-4">
+            <a href="#store">Store</a>
+            <a href="#rules">Rules</a>
+            <a href="https://discord.gg/cF4JMwJW" target="_blank">Discord</a>
+            <a href="#faq">Support</a>
+        </div>
+        <p class="text-muted small">© 2024 Demon SMP Network. Not affiliated with Mojang AB.<br>Engineered by Utkarsh Pandey.</p>
+    </div>
+</footer>
+
+<a href="https://discord.gg/cF4JMwJW" class="discord-float" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="35" style="filter:invert(1)" alt="Discord">
+</a>
+<div id="trigger-icon" onclick="toggleTerminal()">👹</div>
+
+<div id="ai-terminal">
+    <div class="terminal-header" id="drag-handle">
+        <span id="term-title">ARCHITECT_KERNEL // V99.1</span>
+        <span onclick="toggleTerminal()" style="cursor:pointer; color: red;">[X]</span>
+    </div>
+    <div class="terminal-body" id="term-log">
+        <div style="color: #666;">> Initializing DemonOS Secure Shell...</div>
+        <div style="color: #00ff41;">> CONNECTION SECURE. TYPE 'HELP' FOR MODULES.</div>
+    </div>
+    <div class="terminal-input-area">
+        <span class="text-danger me-3">#</span>
+        <input type="text" id="term-in" autocomplete="off" placeholder="Command...">
+    </div>
+</div>
+
+<div class="modal fade" id="payModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-5 text-center">
+            <h2 class="mb-4">GATEWAY</h2>
+            <button class="purchase-button mb-3" onclick="window.open('https://demonsmp.craftingstore.net/')">AUTO WEBSTORE</button>
+            <button class="purchase-button" style="background:#5865F2" onclick="window.open('https://discord.gg/cF4JMwJW')">DISCORD TICKET (UPI)</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const TARGET_IP = "in2.wammuhost.com:25978";
+    let isOwner = false;
+    let stage = 0;
+
+    // SCROLL REVEAL
+    document.addEventListener("DOMContentLoaded", function() {
+        const revealElements = document.querySelectorAll('.reveal-element');
+        const revealObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        revealElements.forEach(e => revealObserver.observe(e));
+    });
+
+    // FAQ TOGGLE
+    function toggleFAQ(element) {
+        const answer = element.nextElementSibling;
+        const icon = element.querySelector('.faq-icon');
+        if (answer.classList.contains('open')) {
+            answer.classList.remove('open');
+            icon.innerText = "+";
+        } else {
+            answer.classList.add('open');
+            icon.innerText = "-";
+        }
+    }
+
+    // TERMINAL
+    function toggleTerminal() {
+        const t = document.getElementById('ai-terminal');
+        t.style.display = (t.style.display === 'flex') ? 'none' : 'flex';
+        if(t.style.display === 'flex') document.getElementById('term-in').focus();
+    }
+
+    function writeLog(text, color = "#00ff41") {
+        const l = document.getElementById('term-log');
+        const d = document.createElement('div');
+        d.style.color = color;
+        d.innerHTML = `> ${text}`;
+        l.appendChild(d);
+        l.scrollTop = l.scrollHeight;
+    }
+
+    // COMMAND ENGINE (THE MASSIVE BLOCK)
+    document.getElementById('term-in').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const val = e.target.value.trim();
+            const cmd = val.toLowerCase();
+            e.target.value = "";
+
+            if (stage === 0 && cmd === 'login') {
+                writeLog("CRITICAL_SECURITY: ACCESSING ARCHITECT PORTAL...", "red");
+                writeLog("INPUT KEY_PHRASE:", "red");
+                stage = 1; return;
+            }
+            if (stage === 1 && cmd === 'pass') {
+                isOwner = true;
+                document.getElementById('master-body').classList.add('gold-mode');
+                writeLog("WELCOME ARCHITECT UTKARSH. SYSTEMS AT YOUR COMMAND.", "#ffcc00");
+                startMatrix(); stage = 2; return;
+            }
+
+            if (cmd === 'help') { writeLog("PUBLIC: ip, discord, ranks, leaders, clear, lore, classes"); return; }
+            if (cmd === 'ip') { writeLog("SERVER_IP: " + TARGET_IP); return; }
+            if (cmd === 'clear') { document.getElementById('term-log').innerHTML = ""; return; }
+            if (cmd === 'lore') { document.getElementById('lore').scrollIntoView(); return; }
+
+            // OWNER COMMANDS BLOCK (UNCOMPRESSED AS REQUESTED)
+            if (isOwner) {
+                if (cmd === 'nuke') writeLog("INITIATING WORLD NUCLEAR PROTOCOL...", "red");
+                else if (cmd === 'lockdown') writeLog("SYSTEM SEALED.", "gold");
+                else if (cmd === 'reboot') writeLog("KERNEL RESTARTING...", "gold");
+                else if (cmd === 'ban_all') writeLog("BAN HAMMER ACTIVE.", "red");
+                else if (cmd === 'op_all') writeLog("ALL PLAYERS PROMOTED.", "gold");
+                else if (cmd === 'status') writeLog("TPS: 20.0 // RAM: 12GB/32GB", "gold");
+                else writeLog("ERR_CMD_NOT_FOUND");
+            } else {
+                writeLog("ERR_CMD_NOT_FOUND");
+            }
+        }
+    });
+
+    function copyIP() { navigator.clipboard.writeText(TARGET_IP); alert("IP COPIED!"); }
+    function checkout() { new bootstrap.Modal(document.getElementById('payModal')).show(); }
+
+    // PLAYER SYNC
+    function syncPlayers() {
+        fetch(`https://api.mcsrvstat.us/2/${TARGET_IP}`)
+            .then(res => res.json())
+            .then(data => {
+                const s = document.getElementById('online-status');
+                s.innerText = data.online ? `${data.players.online} DEMONS ONLINE` : "SERVER OFFLINE";
+            });
+    }
+    syncPlayers(); setInterval(syncPlayers, 30000);
+
+    // LIVE FEED
+    function generateFakeEvent() {
+        const feed = document.getElementById('feed-logs');
+        const players = ["DarkKnight", "Venom_X", "GhostRider99", "SlayerPro", "Toxic_Blade"];
+        const ev = ["slain by Hydra", "joined the server", "found Diamonds", "fell into void"];
+        const item = document.createElement('div');
+        item.className = 'feed-item';
+        item.innerHTML = `<span class="feed-player">${players[Math.floor(Math.random()*players.length)]}</span> <span class="feed-event">${ev[Math.floor(Math.random()*ev.length)]}</span>`;
+        feed.appendChild(item);
+        if (feed.children.length > 10) feed.removeChild(feed.firstChild);
+    }
+    setInterval(generateFakeEvent, 3000);
+
+    // MATRIX BG
+    function startMatrix() {
+        const c = document.getElementById('bg-canvas');
+        const ctx = c.getContext('2d');
+        const drops = Array(Math.floor(c.width/12)).fill(1);
+        function draw() {
+            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,c.width,c.height);
+            ctx.fillStyle = "#ffcc00"; drops.forEach((y, i) => {
+                ctx.fillText(String.fromCharCode(Math.random()*128), i*12, y*12);
+                if(y*12 > c.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(draw, 33);
+    }
+
+    // INITIAL PARTICLE BG
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    let particles = Array(40).fill().map(() => ({x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*2}));
+    function render() {
+        if (isOwner) return;
+        ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle = "red";
+        particles.forEach(p => { ctx.fillRect(p.x, p.y, p.s, p.s); p.y -= 0.5; if(p.y < 0) p.y = canvas.height; });
+        requestAnimationFrame(render);
+    }
+    render();
+</script>
+</body>
+</html>
