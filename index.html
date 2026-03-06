@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEMON SMP | LIFESTEAL ELITE</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Orbitron:wght@400;900&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root { --red: #ff0000; --bg: #050505; --panel: #0a0a0a; --glow: 0 0 25px rgba(255, 0, 0, 0.6); --gold: #ffcc00; }
+        * { cursor: crosshair; box-sizing: border-box; }
+        body { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; margin: 0; overflow-x: hidden; scroll-behavior: smooth; }
+        body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(255,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,0,0,0.05) 1px, transparent 1px); background-size: 40px 40px; z-index: -1; }
+
+        /* HERO SECTION */
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle, rgba(120,0,0,0.2) 0%, transparent 70%); }
+        .hero img { width: 220px; border-radius: 20px; margin-bottom: 20px; filter: drop-shadow(var(--glow)); border: 2px solid var(--red); }
+        .hero h1 { font-family: 'Syncopate'; font-size: clamp(3rem, 10vw, 7rem); text-shadow: var(--glow); margin: 0; }
+
+        .ip-box { background: #000; border: 3px solid var(--red); padding: 15px 40px; font-family: 'Orbitron'; font-size: 1.2rem; cursor: pointer; transition: 0.4s; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); margin-top: 30px; }
+        .ip-box:hover { background: var(--red); transform: scale(1.05); box-shadow: 0 0 50px var(--red); }
+
+        /* STORE SECTION */
+        .section-padding { padding: 80px 0; }
+        .cat-title { font-family: 'Syncopate'; font-size: 2.5rem; color: var(--red); margin-bottom: 50px; border-left: 10px solid var(--red); padding-left: 20px; text-transform: uppercase; }
+
+        .demon-card { background: var(--panel); border: 1px solid #222; padding: 40px; transition: 0.4s; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+        .demon-card:hover { border-color: var(--red); transform: translateY(-10px); box-shadow: 0 15px 40px rgba(255,0,0,0.3); }
+        .price { font-size: 3.5rem; font-family: 'Orbitron'; color: var(--gold); font-weight: 900; margin: 20px 0; }
+        .buy-btn { background: var(--red); color: white; border: none; width: 100%; padding: 15px; font-weight: 900; text-transform: uppercase; transition: 0.3s; text-decoration: none; display: block; text-align: center; }
+        .buy-btn:hover { background: white; color: black; box-shadow: 0 0 20px white; }
+
+        /* STAFF SECTION */
+        .staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .staff-box { background: #111; padding: 40px 20px; border-bottom: 5px solid var(--red); transition: 0.3s; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%); }
+        .staff-box:hover { background: var(--red); transform: translateY(-5px); }
+        .staff-box h3 { font-family: 'Syncopate'; font-size: 1.5rem; margin-bottom: 10px; }
+        .role { color: var(--red); font-weight: bold; letter-spacing: 3px; font-size: 0.9rem; }
+        .staff-box:hover .role { color: white; }
+
+        /* AI WIDGET */
+        #ai-widget { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        #ai-button { width: 70px; height: 70px; background: var(--red); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--glow); border: 3px solid white; font-size: 2rem; }
+        #ai-window { display: none; background: #000; border: 2px solid var(--red); width: 350px; height: 500px; flex-direction: column; box-shadow: var(--glow); margin-bottom: 15px; border-radius: 10px; overflow: hidden; }
+        #ai-header { background: var(--red); padding: 12px; font-family: 'Orbitron'; font-size: 0.8rem; }
+        #ai-body { flex-grow: 1; padding: 15px; overflow-y: auto; color: #0f0; font-family: 'monospace'; font-size: 0.9rem; }
+        .ai-input-wrap { display: flex; background: #111; padding: 10px; }
+        #ai-input { background: transparent; border: none; color: white; flex-grow: 1; outline: none; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-black border-bottom border-danger py-3">
+    <div class="container">
+        <a class="navbar-brand fw-bold" style="font-family: 'Syncopate'; font-size: 1.8rem;">DEMON<span style="color:var(--red)">_SMP</span></a>
+        <div class="ms-auto d-flex gap-4">
+            <a href="#store" class="text-white text-decoration-none fw-bold">STORE</a>
+            <a href="#staff" class="text-white text-decoration-none fw-bold">COUNCIL</a>
+        </div>
+    </div>
+</nav>
+
+<header class="hero">
+    <img src="https://i.ibb.co/L6VvXpD/Demon-Logo.jpg" alt="Demon Logo">
+    <h1>DEMON SMP</h1>
+    <div class="ip-box" id="ip-button" onclick="copyIP()">IN2.WAMMUHOST.COM:25978</div>
+    <div id="server-status" class="mt-4 text-danger fw-bold">● CONTACTING CORE...</div>
+</header>
+
+<section id="store" class="container section-padding">
+    <h2 class="cat-title">SUPPLY DEPOT</h2>
+    <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+            <div class="demon-card">
+                <div>
+                    <h3>DEMONIC RANK</h3>
+                    <p class="opacity-50 mt-2">Highest tier. Exclusive kits & commands.</p>
+                </div>
+                <div>
+                    <div class="price">₹50</div>
+                    <a href="https://demonsmp.craftingstore.net/" class="buy-btn">PURCHASE</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="demon-card">
+                <div>
+                    <h3>RADIAL RANK</h3>
+                    <p class="opacity-50 mt-2">Advanced warrior. Specialized loot access.</p>
+                </div>
+                <div>
+                    <div class="price">₹40</div>
+                    <a href="https://demonsmp.craftingstore.net/" class="buy-btn">PURCHASE</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="demon-card">
+                <div>
+                    <h3>ASTRAL RANK</h3>
+                    <p class="opacity-50 mt-2">Premium starter. Extra resources & home sets.</p>
+                </div>
+                <div>
+                    <div class="price">₹20</div>
+                    <a href="https://demonsmp.craftingstore.net/" class="buy-btn">PURCHASE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="staff" class="container section-padding">
+    <h2 class="cat-title">THE COUNCIL</h2>
+    <div class="staff-grid">
+        <div class="staff-box">
+            <h3>AAYUSH</h3>
+            <div class="role">OWNER & FOUNDER</div>
+        </div>
+        <div class="staff-box">
+            <h3>HYDRA</h3>
+            <div class="role">CO-OWNER</div>
+        </div>
+        <div class="staff-box">
+            <h3>PVP_PRO</h3>
+            <div class="role">ADMINISTRATOR</div>
+        </div>
+    </div>
+</section>
+
+<div id="ai-widget">
+    <div id="ai-window">
+        <div id="ai-header">INFERNO_OS v5.0 // ACTIVE</div>
+        <div id="ai-body">> Root access granted. Ready for orders.</div>
+        <div class="ai-input-wrap"><input type="text" id="ai-input" placeholder="Directive..." autocomplete="off"></div>
+    </div>
+    <div id="ai-button" onclick="toggleAI()">👹</div>
+</div>
+
+<script>
+    const serverIP = "in2.wammuhost.com:25978";
+
+    function toggleAI() {
+        const win = document.getElementById('ai-window');
+        win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    document.getElementById('ai-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            const body = document.getElementById('ai-body');
+            body.innerHTML += `<div style="color:#fff; margin-top:10px;">> ${this.value}</div>`;
+            let res = "ERROR: Directive not found. Type 'help'.";
+            const val = this.value.toLowerCase();
+            if(val.includes('help')) res = "DIRECTIVES: [IP] [STORE] [STAFF] [RULES].";
+            if(val.includes('ip')) res = "PORTAL: " + serverIP;
+            if(val.includes('staff')) res = "COUNCIL: Aayush, Hydra, and PVP_PRO.";
+            if(val.includes('rules')) res = "LIFESTEAL: Kill = +1 Heart. Die = -1 Heart. 0 Hearts = 24h Ban.";
+
+            setTimeout(() => {
+                body.innerHTML += `<div style="color:var(--red); border-left: 2px solid var(--red); padding-left: 8px; margin-top:5px;">> ${res}</div>`;
+                body.scrollTop = body.scrollHeight;
+            }, 300);
+            this.value = "";
+        }
+    });
+
+    function copyIP() {
+        navigator.clipboard.writeText(serverIP);
+        document.getElementById('ip-button').innerHTML = "COPIED!";
+        setTimeout(() => { document.getElementById('ip-button').innerHTML = serverIP; }, 2000);
+    }
+
+    async function updateStatus() {
+        try {
+            const res = await fetch('https://api.mcsrvstat.us/2/' + serverIP);
+            const d = await res.json();
+            document.getElementById('server-status').innerHTML = d.online ? `● ONLINE // ${d.players.online} WARRIORS` : "● SYSTEM OFFLINE";
+        } catch(e) { document.getElementById('server-status').innerHTML = "● OFFLINE"; }
+    }
+    updateStatus();
+</script>
+</body>
+</html>
