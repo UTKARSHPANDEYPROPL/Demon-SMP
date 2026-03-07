@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEMON SMP | GENESIS COMPLETE</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Orbitron:wght@400;900&family=Rajdhani:wght@600&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --main: #ff0000;
+            --gold: #ffcc00;
+            --dark: #020202;
+            --glow: 0 0 25px rgba(255, 0, 0, 0.6);
+        }
+
+        * { cursor: crosshair; box-sizing: border-box; }
+        body { background: var(--dark); color: #fff; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; margin: 0; scroll-behavior: smooth; }
+
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.3; }
+
+        /* NAVBAR */
+        .navbar { background: rgba(0,0,0,0.95) !important; border-bottom: 2px solid var(--main); z-index: 1000; }
+        .nav-link { font-family: 'Orbitron'; color: white !important; letter-spacing: 2px; font-size: 0.75rem; transition: 0.3s; }
+        .nav-link:hover { color: var(--main) !important; text-shadow: var(--glow); }
+
+        /* HERO */
+        .hero { height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        h1 { font-family: 'Syncopate'; font-size: clamp(2.5rem, 8vw, 6rem); margin: 0; }
+        h1 span { color: var(--main); }
+        .ip-box { background: #000; border: 2px solid var(--main); padding: 15px 40px; font-family: 'Orbitron'; font-weight: 900; margin-top: 30px; cursor: pointer; transition: 0.4s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
+        .ip-box:hover { background: var(--main); box-shadow: var(--glow); transform: scale(1.05); }
+
+        /* SOCIAL BUTTONS */
+        .social-hub { margin-top: 40px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        .soc-btn { padding: 10px 25px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.7rem; border: 1px solid #fff; color: #fff; text-decoration: none; transition: 0.3s; clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%); }
+        .soc-discord { border-color: #5865F2; } .soc-discord:hover { background: #5865F2; box-shadow: 0 0 15px #5865F2; }
+        .soc-insta { border-color: #E1306C; } .soc-insta:hover { background: #E1306C; box-shadow: 0 0 15px #E1306C; }
+        .soc-yt { border-color: #FF0000; } .soc-yt:hover { background: #FF0000; box-shadow: 0 0 15px #FF0000; }
+
+        /* SECTIONS */
+        .section-title { font-family: 'Syncopate'; font-size: 2rem; color: var(--main); margin: 80px 0 40px; text-align: center; letter-spacing: 8px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+
+        .demon-card {
+            background: rgba(10,10,10,0.9); border: 1px solid #222; padding: 30px; transition: 0.4s; height: 100%; display: flex; flex-direction: column; justify-content: space-between; clip-path: polygon(0 0, 92% 0, 100% 8%, 100% 100%, 8% 100%, 0 92%);
+        }
+        .demon-card:hover { border-color: var(--main); transform: translateY(-5px); box-shadow: var(--glow); }
+
+        .price { font-size: 2.2rem; font-family: 'Orbitron'; color: var(--gold); font-weight: 900; margin: 15px 0; }
+        .buy-btn { background: var(--main); color: white; border: none; width: 100%; padding: 12px; font-weight: 900; font-family: 'Orbitron'; transition: 0.3s; }
+        .buy-btn:hover { background: #fff; color: #000; }
+
+        /* INFERNO OS */
+        #ai-shell { position: fixed; bottom: 110px; right: 40px; width: 450px; height: 500px; background: rgba(5, 5, 5, 0.98); border: 2px solid var(--main); display: none; flex-direction: column; z-index: 10000; border-radius: 8px; box-shadow: 0 0 40px #000; }
+        .os-content { flex-grow: 1; padding: 20px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; }
+        .os-input { background: #000; padding: 15px; border-top: 1px solid #222; display: flex; }
+        .os-input input { background: transparent; border: none; color: white; width: 100%; outline: none; }
+        #trigger { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: var(--main); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 3px solid white; z-index: 10001; font-size: 1.8rem; box-shadow: var(--glow); }
+
+        .modal-content { background: #000; border: 2px solid var(--main); color: #fff; font-family: 'Orbitron'; }
+    </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#" style="font-family: 'Syncopate';">DEMON<span>_SMP</span></a>
+        <div class="ms-auto d-flex gap-3">
+            <a href="#vote" class="nav-link">VOTE</a>
+            <a href="#shop" class="nav-link">SHOP</a>
+            <a href="#council" class="nav-link">COUNCIL</a>
+        </div>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1>DEMON <span>SMP</span></h1>
+    <div class="ip-box" onclick="copyIP()">IN2.WAMMUHOST.COM:25978</div>
+
+    <div class="social-hub">
+        <a href="https://discord.gg/cF4JMwJW" target="_blank" class="soc-btn soc-discord">DISCORD</a>
+        <a href="https://www.instagram.com/" target="_blank" class="soc-btn soc-insta">INSTAGRAM</a>
+        <a href="https://www.youtube.com/" target="_blank" class="soc-btn soc-yt">YOUTUBE</a>
+    </div>
+</section>
+
+<section class="container py-5" id="vote">
+    <h2 class="section-title">VOTE PORTAL</h2>
+    <p class="text-center mb-5 opacity-75">VOTING ON ALL 3 LINKS REDEEMS 1x VOTE KEY IN-GAME</p>
+    <div class="row g-4">
+        <div class="col-md-4"><div class="demon-card text-center"><h3>VOTE LINK 1</h3><button class="buy-btn mt-3" onclick="window.open('https://minecraft-mp.com/server/355309/vote/')">OPEN LINK</button></div></div>
+        <div class="col-md-4"><div class="demon-card text-center"><h3>VOTE LINK 2</h3><button class="buy-btn mt-3" onclick="window.open('https://minecraft-server-list.com/server/518471/vote/')">OPEN LINK</button></div></div>
+        <div class="col-md-4"><div class="demon-card text-center"><h3>VOTE LINK 3</h3><button class="buy-btn mt-3" onclick="window.open('https://topg.org/minecraft-servers/server-680059-changeme#vote')">OPEN LINK</button></div></div>
+    </div>
+</section>
+
+<section class="container py-5" id="shop">
+    <h2 class="section-title">SUPPLY DEPOT</h2>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4"><div class="demon-card text-center"><h3>ASTRAL RANK</h3><div class="price">20 INR</div><button class="buy-btn" onclick="openGate()">PURCHASE</button></div></div>
+        <div class="col-md-4"><div class="demon-card text-center"><h3>RADIAL RANK</h3><div class="price">40 INR</div><button class="buy-btn" onclick="openGate()">PURCHASE</button></div></div>
+        <div class="col-md-4"><div class="demon-card text-center"><h3>DEMONIC RANK</h3><div class="price">50 INR</div><button class="buy-btn" onclick="openGate()">PURCHASE</button></div></div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-3"><div class="demon-card text-center"><h3>ASTRAL KEY</h3><div class="price">5 INR</div><button class="buy-btn" onclick="openGate()">PURCHASE</button></div></div>
+        <div class="col-md-3"><div class="demon-card text-center"><h3>RADIAL KEY</h3><div class="price">10 INR</div><button class="buy-btn" onclick="openGate()">PURCHASE</button></div></div>
+        <div class="col-md-3"><div class="demon-card text-center"><h3>SPAWNER KEY</h3><div class="price">10 INR</div><button class="buy-btn" onclick="openGate()">PURCHASE</button></div></div>
+        <div class="col-md-3"><div class="demon-card text-center"><h3>DEMONIC KEY</h3><div class="price">15 INR</div><button class="buy-btn" onclick="openGate()">PURCHASE</button></div></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4"><div class="demon-card text-center"><h3>ASTRAL BUNDLE</h3><div class="price">50 INR</div><button class="buy-btn" onclick="openGate()">PURCHASE</button></div></div>
+        <div class="col-md-4"><div class="demon-card text-center"><h3>RADIAL BUNDLE</h3><div class="price">75 INR</div><button class="buy-btn" onclick="openGate()">PURCHASE</button></div></div>
+        <div class="col-md-4"><div class="demon-card text-center"><h3>DEMONIC BUNDLE</h3><div class="price">100 INR</div><button class="buy-btn" onclick="openGate()">PURCHASE</button></div></div>
+    </div>
+</section>
+
+<section class="container py-5 mb-5" id="council">
+    <h2 class="section-title">THE COUNCIL</h2>
+    <div class="row g-4 text-center">
+        <div class="col-md-4"><div class="demon-card"><h3>Aayush</h3><p class="text-danger fw-bold">OWNER</p></div></div>
+        <div class="col-md-4"><div class="demon-card"><h3>Hydra</h3><p class="text-danger fw-bold">OWNER</p></div></div>
+        <div class="col-md-4"><div class="demon-card"><h3>PVP_PRO</h3><p class="text-danger fw-bold">OWNER</p></div></div>
+    </div>
+</section>
+
+<div class="modal fade" id="gateModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4 text-center">
+            <h3 class="mb-4">GATEWAY</h3>
+            <div class="d-grid gap-3">
+                <button class="buy-btn" onclick="window.open('https://demonsmp.craftingstore.net/')">WEBSTORE (AUTO)</button>
+                <button class="buy-btn" style="background:#5865F2" onclick="window.open('https://discord.gg/cF4JMwJW')">DISCORD (UPI)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ai-shell">
+    <div class="os-content" id="os-log">
+        <div style="color:var(--main)">> INFERNO_OS ONLINE.</div>
+        <div style="color:var(--gold)">> Status: Neural Bridge Stable. Type 'HELP'.</div>
+    </div>
+    <div class="os-input">
+        <span class="text-danger me-2">></span>
+        <input type="text" id="os-input" placeholder="Directive..." autocomplete="off">
+    </div>
+</div>
+
+<div id="trigger" onclick="toggleOS()">👹</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const log = document.getElementById('os-log');
+    const input = document.getElementById('os-input');
+    const shell = document.getElementById('ai-shell');
+    const ip = "in2.wammuhost.com:25978";
+
+    function toggleOS() {
+        shell.style.display = (shell.style.display === 'flex') ? 'none' : 'flex';
+        if(shell.style.display === 'flex') input.focus();
+    }
+
+    function addLog(msg, col) {
+        const div = document.createElement('div');
+        div.style.color = col || "#fff";
+        div.innerHTML = `> ${msg}`;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    function openGate() { new bootstrap.Modal(document.getElementById('gateModal')).show(); }
+    function copyIP() { navigator.clipboard.writeText(ip); alert("IP COPIED: " + ip); }
+
+    input.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') {
+            const val = input.value.trim().toLowerCase();
+            if(['hi', 'yo', 'hello'].some(w => val.includes(w))) addLog("GREETINGS. THE ABYSS WELCOMES YOU.", "var(--gold)");
+            else if(val === 'owner' || val === 'staff' || val === 'utkarsh') {
+                addLog("ARCHITECT: Utkarsh Pandey", "#fff");
+                addLog("COUNCIL: Aayush, Hydra, PVP_PRO", "#fff");
+                addLog("IP: " + ip, "var(--gold)");
+            }
+            else if(val === 'help') addLog("CMDS: OWNER, SHOP, VOTE, IP, CLEAR", "var(--main)");
+            else if(val === 'clear') log.innerHTML = "";
+            else if(val === 'shop') document.getElementById('shop').scrollIntoView();
+            else addLog("COMMAND NOT FOUND.", "red");
+            input.value = "";
+        }
+    });
+
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    let p = [];
+    for(let i=0; i<50; i++) p.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*2});
+    function draw() {
+        ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle = "red";
+        p.forEach(i => { ctx.fillRect(i.x, i.y, i.s, i.s); i.y -= 0.5; if(i.y<0) i.y=canvas.height; });
+        requestAnimationFrame(draw);
+    }
+    draw();
+</script>
+</body>
+</html>
