@@ -3,970 +3,971 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Norden-Mc | GENESIS OMNI-EDITION (ULTRA DETAIL)</title>
+    <title>Norden-Mc | GENESIS OMNI-EXTREME EDITION</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <style>
         /* ========================================================
-           CORE SYSTEM VARIABLES & THEME ENGINE
-           ========================================================
+           CORE SYSTEM VARIABLES (NEXUS CONFIG)
+           ======================================================== 
         */
         :root {
-            /* DEFAULT: SPACE-NEXUS THEME */
-            --main: #00e5ff;     
-            --gold: #b026ff;     
-            --dark: #030014;     
-            --glow: 0 0 40px rgba(0, 229, 255, 0.7);
-            --card-bg: rgba(10, 10, 30, 0.85);
-            --font-main: 'Rajdhani', sans-serif;
-            --font-accent: 'Orbitron', sans-serif;
-            --vignette: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.85));
-            --border-glow: 1px solid rgba(0, 229, 255, 0.3);
-            --text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-            --discount-bg: rgba(255, 255, 255, 0.05);
+            /* SPACE THEME (DEFAULT) */
+            --main-cyan: #00e5ff;
+            --main-glow: rgba(0, 229, 255, 0.7);
+            --accent-purple: #b026ff;
+            --accent-glow: rgba(176, 38, 255, 0.7);
+            --bg-dark: #030014;
+            --card-overlay: rgba(10, 10, 30, 0.95);
+            --font-primary: 'Rajdhani', sans-serif;
+            --font-header: 'Syncopate', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+            --border-width: 2px;
+            --transition-speed: 0.6s;
         }
 
-        /* OVERRIDE: NATURE-GENESIS THEME */
+        /* NATURE THEME OVERRIDE */
         body.nature-theme {
-            --main: #4cd137;     
-            --gold: #f1c40f;     
-            --dark: #0a1708;     
-            --glow: 0 0 40px rgba(76, 209, 55, 0.7);
-            --card-bg: rgba(15, 35, 15, 0.85);
-            --vignette: radial-gradient(circle, transparent 30%, rgba(10,23,8,0.95));
-            --border-glow: 1px solid rgba(76, 209, 55, 0.3);
-            --text-shadow: 0 0 10px rgba(76, 209, 55, 0.5);
+            --main-cyan: #4cd137;
+            --main-glow: rgba(76, 209, 55, 0.7);
+            --accent-purple: #f1c40f;
+            --accent-glow: rgba(241, 196, 15, 0.7);
+            --bg-dark: #0a1708;
+            --card-overlay: rgba(15, 35, 15, 0.95);
         }
 
         /* ========================================================
-           GLOBAL ANIMATIONS & KEYFRAMES
-           ========================================================
+           GLOBAL ANIMATION REPOSITORY
+           ======================================================== 
         */
-        @keyframes scanline {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
+        @keyframes scanline_motion {
+            0% { top: -100%; }
+            100% { top: 100%; }
         }
 
-        @keyframes holoPulse {
-            0%, 100% { opacity: 0.8; box-shadow: 0 0 5px var(--main); border-color: var(--main); }
-            50% { opacity: 1; box-shadow: 0 0 25px var(--main); border-color: #fff; }
+        @keyframes pulse_border_cyan {
+            0% { border-color: var(--main-cyan); box-shadow: 0 0 10px var(--main-cyan); }
+            50% { border-color: #fff; box-shadow: 0 0 30px var(--main-cyan); }
+            100% { border-color: var(--main-cyan); box-shadow: 0 0 10px var(--main-cyan); }
         }
 
-        @keyframes coreBlink {
-            0%, 100% { opacity: 1; transform: scale(1); filter: brightness(1); }
-            50% { opacity: 0.4; transform: scale(1.2); filter: brightness(1.5); }
+        @keyframes glitch_skew_active {
+            0% { transform: skew(0deg); filter: hue-rotate(0deg); }
+            10% { transform: skew(3deg); filter: hue-rotate(90deg); }
+            20% { transform: skew(-3deg); }
+            30% { transform: skew(1deg); }
+            40% { transform: skew(0deg); filter: hue-rotate(0deg); }
+            100% { transform: skew(0deg); }
         }
 
-        @keyframes textGlitch {
-            0% { text-shadow: 2px 0 var(--main), -2px 0 var(--gold); }
-            25% { text-shadow: -2px 0 var(--main), 2px 0 var(--gold); }
-            50% { text-shadow: 2px 2px var(--main), -2px -2px var(--gold); }
-            75% { text-shadow: -2px -2px var(--main), 2px 2px var(--gold); }
-            100% { text-shadow: 2px 0 var(--main), -2px 0 var(--gold); }
+        @keyframes float_y {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
         }
 
         /* ========================================================
-           BASE STYLING & FX LAYERS
-           ========================================================
+           CORE UI LAYOUT
+           ======================================================== 
         */
-        * { 
-            cursor: crosshair; 
-            box-sizing: border-box; 
-            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        * {
+            cursor: crosshair;
+            box-sizing: border-box;
+            transition: all var(--transition-speed) cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        body { 
-            background: var(--dark); 
-            color: #ffffff; 
-            font-family: var(--font-main); 
-            overflow-x: hidden; 
-            margin: 0; 
-            scroll-behavior: smooth; 
+        body {
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            font-family: var(--font-primary);
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
         }
 
-        /* POST-PROCESSING FX */
-        .vignette-layer {
+        .system-vignette {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--vignette);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.9) 120%);
             pointer-events: none;
             z-index: 9998;
         }
 
-        .scanline-layer {
+        .global-scanner {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3) 51%);
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 9999;
+            left: 0; width: 100%; height: 4px;
+            background: var(--main-cyan);
+            box-shadow: 0 0 20px var(--main-cyan);
             opacity: 0.15;
+            z-index: 9999;
+            animation: scanline_motion 10s linear infinite;
         }
 
-        #bg-canvas { 
-            position: fixed; 
-            top: 0; left: 0; 
-            z-index: -1; 
-            opacity: 0.6; 
+        #genesis-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            z-index: -1;
+            opacity: 0.5;
         }
 
         /* ========================================================
-           NAVIGATION & HUD
-           ========================================================
+           NAVIGATION SYSTEM
+           ======================================================== 
         */
-        .navbar { 
-            background: rgba(0,0,0,0.95) !important; 
-            backdrop-filter: blur(20px);
-            border-bottom: 3px solid var(--main); 
-            z-index: 10000; 
+        .nexus-navbar {
+            background: rgba(0,0,0,0.98) !important;
+            backdrop-filter: blur(25px);
+            border-bottom: var(--border-width) solid var(--main-cyan);
             padding: 25px 0;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+            z-index: 10000;
         }
 
-        .navbar-brand {
-            font-family: 'Syncopate';
+        .nexus-brand {
+            font-family: var(--font-header);
             font-size: 1.8rem;
-            letter-spacing: 6px;
+            letter-spacing: 8px;
             text-transform: uppercase;
-            color: white !important;
-            text-shadow: var(--text-shadow);
+            color: #fff !important;
+            text-decoration: none;
         }
 
-        .navbar-brand span { 
-            color: var(--main); 
-            filter: drop-shadow(var(--glow));
+        .nexus-brand span {
+            color: var(--main-cyan);
+            text-shadow: 0 0 15px var(--main-cyan);
         }
 
-        .nav-link { 
-            font-family: var(--font-accent); 
-            color: white !important; 
-            letter-spacing: 4px; 
-            font-size: 0.9rem; 
+        .nexus-nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nexus-link {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff !important;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-size: 0.85rem;
             font-weight: 700;
-            position: relative;
-            margin: 0 20px;
-            text-transform: uppercase;
-        }
-
-        .nav-link::before {
-            content: '[';
-            margin-right: 5px;
-            opacity: 0;
-            transition: 0.3s;
-        }
-
-        .nav-link::after {
-            content: ']';
-            margin-left: 5px;
-            opacity: 0;
-            transition: 0.3s;
-        }
-
-        .nav-link:hover::before, .nav-link:hover::after { opacity: 1; color: var(--main); }
-        .nav-link:hover { color: var(--main) !important; text-shadow: var(--glow); }
-
-        /* ========================================================
-           HERO SECTION: THE CORE
-           ========================================================
-        */
-        .hero { 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            text-align: center; 
-            padding: 0 20px;
-        }
-
-        .hero-title-container {
+            margin: 0 25px;
+            text-decoration: none;
             position: relative;
         }
 
-        h1 { 
-            font-family: 'Syncopate'; 
-            font-size: clamp(3rem, 15vw, 9rem); 
-            margin: 0; 
-            text-transform: uppercase;
-            letter-spacing: -10px;
-            line-height: 0.85;
-        }
-
-        h1 span { 
-            color: var(--main); 
-            filter: drop-shadow(var(--glow)); 
-            animation: textGlitch 5s infinite linear;
-        }
-
-        .status-module { 
-            margin-top: 30px; 
-            font-family: var(--font-accent); 
-            font-size: 1.2rem; 
-            color: var(--gold); 
-            letter-spacing: 10px; 
-            text-transform: uppercase;
-            background: rgba(255,255,255,0.05);
-            padding: 10px 30px;
-            border-radius: 50px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .pulse-core { 
-            display: inline-block; 
-            width: 18px; height: 18px; 
-            background: #00ff00; 
-            border-radius: 50%; 
-            margin-right: 20px; 
-            box-shadow: 0 0 25px #00ff00; 
-            animation: coreBlink 2s infinite ease-in-out; 
-        }
-
-        /* ========================================================
-           INTERACTIVE IP INTERFACE
-           ========================================================
-        */
-        .ip-interface { 
-            background: rgba(0,0,0,0.8); 
-            border: 3px solid var(--main); 
-            padding: 30px 100px; 
-            font-family: var(--font-accent); 
-            font-weight: 900; 
-            margin-top: 60px; 
-            cursor: pointer; 
-            position: relative;
-            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); 
-            overflow: hidden;
-            backdrop-filter: blur(15px);
-            box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.2);
-        }
-
-        .ip-interface::before {
-            content: 'CLICK TO ESTABLISH LINK';
-            position: absolute;
-            top: -100%; left: 0; width: 100%; height: 100%;
-            background: var(--main);
-            color: #000;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.4rem;
-            transition: 0.5s cubic-bezier(0.785, 0.135, 0.15, 0.86);
-        }
-
-        .ip-interface:hover::before { top: 0; }
-        .ip-interface:hover { box-shadow: var(--glow); transform: scale(1.08) translateY(-5px); }
-
-        /* ========================================================
-           STOREFRONT ARCHITECTURE (DEMON CARDS)
-           ========================================================
-        */
-        .section-header { 
-            font-family: 'Syncopate'; 
-            font-size: 3.5rem; 
-            color: var(--main); 
-            margin: 150px 0 100px; 
-            text-align: center; 
-            letter-spacing: 20px; 
-            text-transform: uppercase;
-            position: relative;
-        }
-
-        .section-header::after {
+        .nexus-link::after {
             content: '';
             position: absolute;
-            bottom: -20px; left: 50%; transform: translateX(-50%);
-            width: 200px; height: 4px; background: var(--main);
-            box-shadow: var(--glow);
+            bottom: -5px; left: 0;
+            width: 0%; height: 2px;
+            background: var(--main-cyan);
+            transition: 0.4s;
         }
 
-        .demon-card {
-            background: var(--card-bg); 
-            border: var(--border-glow); 
-            padding: 50px 30px; 
-            height: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-            clip-path: polygon(0 0, 85% 0, 100% 15%, 100% 100%, 15% 100%, 0 85%);
-            backdrop-filter: blur(15px);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
+        .nexus-link:hover::after { width: 100%; }
 
-        /* CARD SCANLINE FX */
-        .demon-card::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.02) 2px);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .demon-card:hover { 
-            border-color: #fff; 
-            transform: translateY(-25px) scale(1.05); 
-            box-shadow: var(--glow); 
-            background: rgba(255,255,255,0.08);
-        }
-
-        /* HOLOGRAPHIC DISCOUNT TAG */
-        .discount-badge {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            background: var(--discount-bg);
-            color: var(--main);
-            font-size: 0.8rem;
-            padding: 8px 18px;
-            font-family: var(--font-accent);
-            font-weight: 900;
-            border: 1px solid var(--main);
-            border-radius: 2px;
-            backdrop-filter: blur(10px);
-            letter-spacing: 3px;
-            animation: holoPulse 2.5s infinite ease-in-out;
-            z-index: 10;
-            text-transform: uppercase;
-        }
-
-        /* HOVER-TO-REVEAL PRICING LOGIC */
-        .price-engine {
-            margin: 30px 0;
-            position: relative;
-            height: 80px;
+        /* ========================================================
+           HERO CORE ENGINE
+           ======================================================== 
+        */
+        .hero-engine {
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
+            position: relative;
+            text-align: center;
         }
 
-        .old-price-reveal {
-            text-decoration: line-through;
-            opacity: 0;
-            font-size: 0.9rem;
-            display: block;
-            color: #ff4d4d;
-            transform: translateY(20px);
-            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-            font-family: var(--font-accent);
-        }
-
-        .demon-card:hover .old-price-reveal {
-            opacity: 0.7;
-            transform: translateY(0);
-        }
-
-        .current-price { 
-            font-size: 2.8rem; 
-            font-family: var(--font-accent); 
-            color: #ffffff; 
-            font-weight: 900; 
-            text-shadow: 0 0 20px rgba(255,255,255,0.3);
-            margin-top: 5px;
-        }
-
-        .current-price small {
-            font-size: 1rem;
-            color: var(--main);
-            margin-left: 5px;
-        }
-
-        /* ACTION BUTTONS */
-        .nexus-btn { 
-            background: linear-gradient(90deg, var(--main), var(--gold), var(--main));
-            background-size: 200% auto;
-            color: #000; 
-            border: none; 
-            width: 100%; 
-            padding: 18px; 
-            font-weight: 900; 
-            font-family: var(--font-accent); 
-            letter-spacing: 4px;
+        .hero-title-main {
+            font-family: var(--font-header);
+            font-size: clamp(3rem, 15vw, 10rem);
+            margin: 0;
+            line-height: 0.8;
+            letter-spacing: -12px;
             text-transform: uppercase;
-            font-size: 0.9rem;
+        }
+
+        .hero-title-main span {
+            color: var(--main-cyan);
+            filter: drop-shadow(0 0 30px var(--main-cyan));
+            animation: glitch_skew_active 6s infinite;
+        }
+
+        .server-status-pill {
+            margin-top: 40px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            padding: 15px 50px;
+            border-radius: 100px;
+            font-family: 'Orbitron';
+            letter-spacing: 6px;
+            font-size: 1rem;
+            color: var(--main-cyan);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-dot {
+            width: 12px; height: 12px;
+            background: #00ff00;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #00ff00;
+        }
+
+        .ip-gate {
+            margin-top: 60px;
+            background: rgba(0,0,0,0.9);
+            border: 3px solid var(--main-cyan);
+            padding: 30px 120px;
+            font-family: 'Orbitron';
+            font-weight: 900;
+            font-size: 1.4rem;
+            color: #fff;
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+            cursor: pointer;
+        }
+
+        .ip-gate:hover {
+            background: var(--main-cyan);
+            color: #000;
+            box-shadow: 0 0 50px var(--main-cyan);
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        /* ========================================================
+           RATINGS: NETWORK INTEGRITY (EXPANDED MANUALLY)
+           ======================================================== 
+        */
+        .section-header-nexus {
+            font-family: var(--font-header);
+            font-size: 3.5rem;
+            text-align: center;
+            letter-spacing: 25px;
+            color: var(--main-cyan);
+            margin: 180px 0 100px;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px var(--main-cyan);
+        }
+
+        .integrity-container {
+            background: var(--card-overlay);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 60px;
+            border-radius: 20px;
+            height: 100%;
+            backdrop-filter: blur(15px);
+        }
+
+        .rating-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .user-identity {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-avatar-hex {
+            width: 50px; height: 50px;
+            background: #000;
+            border: 2px solid var(--main-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron';
+            font-weight: 900;
+            color: var(--main-cyan);
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+        }
+
+        .user-name-tag {
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+        }
+
+        .star-rating-block {
+            color: #ffcc00;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+        }
+
+        /* ========================================================
+           SUPPLY DEPOT: CRATE KEY PROTOCOLS
+           ======================================================== 
+        */
+        .depot-card {
+            background: var(--card-overlay);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 50px 30px;
+            text-align: center;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            height: 100%;
+            clip-path: polygon(0 0, 85% 0, 100% 15%, 100% 100%, 15% 100%, 0 85%);
         }
 
-        .nexus-btn::before {
-            content: '';
+        .depot-card:hover {
+            border-color: var(--main-cyan);
+            transform: translateY(-15px);
+            box-shadow: 0 0 40px var(--main-cyan);
+        }
+
+        .promo-tag {
             position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: 0.6s;
+            top: 25px; right: -35px;
+            background: var(--main-cyan);
+            color: #000;
+            padding: 5px 40px;
+            font-family: 'Orbitron';
+            font-weight: 900;
+            font-size: 0.7rem;
+            transform: rotate(45deg);
         }
 
-        .nexus-btn:hover { 
-            background-position: right center;
-            color: #fff;
-            box-shadow: var(--glow);
-            letter-spacing: 6px;
-            transform: translateY(-3px);
+        .card-category-label {
+            font-family: 'Orbitron';
+            font-size: 0.8rem;
+            letter-spacing: 5px;
+            color: var(--main-cyan);
+            margin-bottom: 20px;
+            display: block;
         }
 
-        .nexus-btn:hover::before { left: 100%; }
-
-        /* ========================================================
-           OS TERMINAL SYSTEM (AI SHELL)
-           ========================================================
-        */
-        #terminal-ui { 
-            position: fixed; 
-            bottom: 130px; 
-            right: 50px; 
-            width: 520px; 
-            height: 650px; 
-            background: rgba(2, 2, 15, 0.99); 
-            border: 2px solid var(--main); 
-            display: none; 
-            flex-direction: column; 
-            z-index: 10000; 
-            border-radius: 20px; 
-            box-shadow: 0 40px 120px rgba(0,0,0,1);
-            backdrop-filter: blur(30px);
-            border-bottom: 8px solid var(--main);
-            animation: terminalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .price-display-core {
+            margin: 30px 0;
+            font-family: 'Orbitron';
         }
 
-        @keyframes terminalPop {
-            from { transform: scale(0.8) translateY(100px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
-        }
-
-        .terminal-header { 
-            background: var(--main); 
-            color: #000; 
-            padding: 15px 25px; 
-            font-family: var(--font-accent); 
-            font-weight: 900; 
-            font-size: 0.85rem; 
-            display: flex; 
-            justify-content: space-between; 
-            border-radius: 18px 18px 0 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .terminal-body { 
-            flex-grow: 1; 
-            padding: 40px; 
-            overflow-y: auto; 
-            font-family: 'Fira Code', monospace; 
-            font-size: 0.95rem; 
-            line-height: 2; 
-            color: #b0b0b0;
-        }
-
-        .terminal-input-wrap { 
-            background: rgba(255,255,255,0.05); 
-            padding: 30px; 
-            border-top: 1px solid rgba(255,255,255,0.1); 
-            display: flex; 
-            align-items: center; 
-        }
-
-        .terminal-input-wrap input { 
-            background: transparent; 
-            border: none; 
-            color: var(--main); 
-            width: 100%; 
-            outline: none; 
-            font-family: 'Fira Code', monospace; 
+        .old-strike {
+            display: block;
+            text-decoration: line-through;
+            color: #ff3e3e;
             font-size: 1.1rem;
-            padding-left: 15px;
-        }
-        
-        /* SYSTEM CONTROLS */
-        .control-orb { 
-            position: fixed; 
-            bottom: 40px; 
-            width: 85px; height: 85px; 
-            border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; 
-            border: 3px solid #fff; 
-            z-index: 10001; 
-            font-size: 2.5rem; 
-            box-shadow: var(--glow); 
-            background: rgba(0,0,0,0.9);
-            transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            opacity: 0.6;
         }
 
-        #terminal-trigger { right: 40px; border-color: var(--main); }
-        #theme-switcher { left: 40px; border-color: var(--gold); }
+        .new-price-bold {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #fff;
+        }
 
-        .control-orb:hover { transform: scale(1.2) rotate(15deg); filter: brightness(1.3); }
+        .new-price-bold small {
+            font-size: 1rem;
+            color: var(--main-cyan);
+        }
+
+        .action-button-nexus {
+            width: 100%;
+            background: var(--main-cyan);
+            color: #000;
+            border: none;
+            padding: 20px;
+            font-family: 'Orbitron';
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-top: 20px;
+        }
+
+        .action-button-nexus:hover {
+            background: #fff;
+            letter-spacing: 8px;
+        }
 
         /* ========================================================
-           SCROLLBAR & MISC
-           ========================================================
+           TERMINAL INTERFACE (GENESIS OS)
+           ======================================================== 
+        */
+        #genesis-terminal-root {
+            position: fixed;
+            bottom: 130px; right: 50px;
+            width: 500px; height: 650px;
+            background: rgba(2, 2, 10, 0.99);
+            border: 2px solid var(--main-cyan);
+            display: none;
+            flex-direction: column;
+            z-index: 20000;
+            border-radius: 12px;
+            box-shadow: 0 40px 100px #000;
+            backdrop-filter: blur(20px);
+        }
+
+        .terminal-top-bar {
+            background: var(--main-cyan);
+            color: #000;
+            padding: 12px 25px;
+            font-family: 'Orbitron';
+            font-weight: 900;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .terminal-scroll-area {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--main-cyan);
+            line-height: 1.8;
+        }
+
+        .terminal-input-row {
+            padding: 25px;
+            background: rgba(255,255,255,0.02);
+            display: flex;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .terminal-input-row input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            width: 100%;
+            font-family: var(--font-mono);
+        }
+
+        .floating-nexus-orb {
+            position: fixed;
+            bottom: 40px; right: 40px;
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: #000;
+            border: 3px solid var(--main-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20001;
+            font-size: 2rem;
+            box-shadow: 0 0 30px var(--main-cyan);
+        }
+
+        .theme-toggle-orb {
+            position: fixed;
+            bottom: 40px; left: 40px;
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: #000;
+            border: 3px solid var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20001;
+            font-size: 2rem;
+            box-shadow: 0 0 30px var(--accent-purple);
+        }
+
+        /* ========================================================
+           SCROLLBAR SPECIFICATION
+           ======================================================== 
         */
         ::-webkit-scrollbar { width: 12px; }
-        ::-webkit-scrollbar-track { background: var(--dark); }
-        ::-webkit-scrollbar-thumb { background: var(--main); border-radius: 10px; border: 3px solid var(--dark); }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--main-cyan); border-radius: 6px; border: 3px solid #000; }
 
     </style>
 </head>
-<body class="space-theme">
+<body class="space-nexus">
 
-<div class="vignette-layer"></div>
-<div class="scanline-layer"></div>
-<canvas id="bg-canvas"></canvas>
+    <div class="system-vignette"></div>
+    <div class="global-scanner"></div>
+    <canvas id="genesis-canvas"></canvas>
 
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="#">NORDEN-<span>MC</span></a>
-        <div class="ms-auto d-none d-lg-flex">
-            <a href="#vote" class="nav-link">VOTE HUB</a>
-            <a href="#shop" class="nav-link">SUPPLY DEPOT</a>
-            <a href="#council" class="nav-link">COUNCIL GATES</a>
+    <nav class="nexus-navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="#" class="nexus-brand">NORDEN-<span>MC</span></a>
+            <div class="nexus-nav-links d-none d-lg-flex">
+                <a href="#integrity" class="nexus-link">Integrity</a>
+                <a href="#depot" class="nexus-link">Depot</a>
+                <a href="#ranks" class="nexus-link">Ranks</a>
+                <a href="#council" class="nexus-link">Council</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-engine">
+        <h1 class="hero-title-main">Norden-<span>Mc</span></h1>
+        <div class="server-status-pill">
+            <div class="status-dot"></div>
+            <span id="player-count-display">SYNCING CORE NODES...</span>
+        </div>
+        <div class="ip-gate" onclick="copyNetworkIP()">
+            PLAY.NORDENMC.FUN
+        </div>
+        <div class="mt-5 d-flex gap-4">
+            <a href="https://discord.gg/9sdyAeb7MV" target="_blank" class="action-button-nexus px-5" style="width: auto;">Discord</a>
+            <a href="https://www.instagram.com/itadori_teacher001/" target="_blank" class="action-button-nexus px-5" style="width: auto; background: #E1306C; color: #fff;">Instagram</a>
+        </div>
+    </section>
+
+    <section class="container py-5" id="integrity">
+        <h2 class="section-header-nexus">NETWORK INTEGRITY</h2>
+        <div class="row g-5">
+            
+            <div class="col-lg-6">
+                <div class="integrity-container">
+                    <h3 style="font-family: 'Orbitron'; color: var(--main-cyan); margin-bottom: 40px;">// WEB INTERFACE FEEDBACK</h3>
+                    
+                    <div class="rating-entry">
+                        <div class="user-identity">
+                            <div class="user-avatar-hex">U</div>
+                            <div class="user-name-tag">Utkarsh Pandey</div>
+                        </div>
+                        <div class="star-rating-block">★★★★★</div>
+                    </div>
+
+                    <div class="rating-entry">
+                        <div class="user-identity">
+                            <div class="user-avatar-hex">A</div>
+                            <div class="user-name-tag">Aayush_Owner</div>
+                        </div>
+                        <div class="star-rating-block">★★★★★</div>
+                    </div>
+
+                    <div class="rating-entry">
+                        <div class="user-identity">
+                            <div class="user-avatar-hex">H</div>
+                            <div class="user-name-tag">Hydra_Developer</div>
+                        </div>
+                        <div class="star-rating-block">★★★★☆</div>
+                    </div>
+
+                    <div class="rating-entry">
+                        <div class="user-identity">
+                            <div class="user-avatar-hex">P</div>
+                            <div class="user-name-tag">PVP_Warlord</div>
+                        </div>
+                        <div class="star-rating-block">★★★★★</div>
+                    </div>
+
+                    <div class="rating-entry">
+                        <div class="user-identity">
+                            <div class="user-avatar-hex">S</div>
+                            <div class="user-name-tag">Site_Architect</div>
+                        </div>
+                        <div class="star-rating-block">★★★★★</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="integrity-container" style="border-color: var(--accent-purple);">
+                    <h3 style="font-family: 'Orbitron'; color: var(--accent-purple); margin-bottom: 40px;">// SERVER PERFORMANCE LOGS</h3>
+                    
+                    <div class="rating-entry">
+                        <div class="user-identity">
+                            <div class="user-avatar-hex" style="border-color: var(--accent-purple); color: var(--accent-purple);">D</div>
+                            <div class="user-name-tag">Dark_Spectre</div>
+                        </div>
+                        <div class="star-rating-block" style="color: var(--accent-purple);">★★★★★</div>
+                    </div>
+
+                    <div class="rating-entry">
+                        <div class="user-identity">
+                            <div class="user-avatar-hex" style="border-color: var(--accent-purple); color: var(--accent-purple);">L</div>
+                            <div class="user-name-tag">Legend_X</div>
+                        </div>
+                        <div class="star-rating-block" style="color: var(--accent-purple);">★★★★★</div>
+                    </div>
+
+                    <div class="rating-entry">
+                        <div class="user-identity">
+                            <div class="user-avatar-hex" style="border-color: var(--accent-purple); color: var(--accent-purple);">V</div>
+                            <div class="user-name-tag">Void_Walker</div>
+                        </div>
+                        <div class="star-rating-block" style="color: var(--accent-purple);">★★★★★</div>
+                    </div>
+
+                    <div class="rating-entry">
+                        <div class="user-identity">
+                            <div class="user-avatar-hex" style="border-color: var(--accent-purple); color: var(--accent-purple);">M</div>
+                            <div class="user-name-tag">Matrix_User</div>
+                        </div>
+                        <div class="star-rating-block" style="color: var(--accent-purple);">★★★★☆</div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="container py-5" id="depot">
+        <h2 class="section-header-nexus">SUPPLY DEPOT</h2>
+        <p class="text-center mb-5" style="letter-spacing: 10px; font-family: 'Orbitron'; color: var(--main-cyan);">// CRATE KEY ENCRYPTION (45% OFF) //</p>
+        
+        <div class="row g-4">
+            <div class="col-lg-2 col-md-4 col-6">
+                <div class="depot-card">
+                    <div class="promo-tag">SALE</div>
+                    <span class="card-category-label">COMMON</span>
+                    <div class="price-display-core">
+                        <span class="old-strike">₹18</span>
+                        <span class="new-price-bold">10<small>INR</small></span>
+                    </div>
+                    <button class="action-button-nexus" onclick="triggerPurchaseGate()">Buy</button>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6">
+                <div class="depot-card">
+                    <div class="promo-tag">SALE</div>
+                    <span class="card-category-label">RARE</span>
+                    <div class="price-display-core">
+                        <span class="old-strike">₹53</span>
+                        <span class="new-price-bold">29<small>INR</small></span>
+                    </div>
+                    <button class="action-button-nexus" onclick="triggerPurchaseGate()">Buy</button>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6">
+                <div class="depot-card">
+                    <div class="promo-tag">SALE</div>
+                    <span class="card-category-label">SPECIAL</span>
+                    <div class="price-display-core">
+                        <span class="old-strike">₹89</span>
+                        <span class="new-price-bold">49<small>INR</small></span>
+                    </div>
+                    <button class="action-button-nexus" onclick="triggerPurchaseGate()">Buy</button>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6">
+                <div class="depot-card">
+                    <div class="promo-tag">SALE</div>
+                    <span class="card-category-label">EPIC</span>
+                    <div class="price-display-core">
+                        <span class="old-strike">₹144</span>
+                        <span class="new-price-bold">79<small>INR</small></span>
+                    </div>
+                    <button class="action-button-nexus" onclick="triggerPurchaseGate()">Buy</button>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-8 col-12">
+                <div class="depot-card" style="border-color: var(--main-cyan);">
+                    <div class="promo-tag" style="background: #fff; color: #000;">ELITE</div>
+                    <span class="card-category-label">SUPERIOR</span>
+                    <div class="price-display-core">
+                        <span class="old-strike">₹180</span>
+                        <span class="new-price-bold">99<small>INR</small></span>
+                    </div>
+                    <button class="action-button-nexus" onclick="triggerPurchaseGate()">Buy</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container py-5" id="ranks">
+        <h2 class="section-header-nexus">RANK ELEVATION</h2>
+        
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="depot-card">
+                    <h3 style="font-family: 'Orbitron'; font-weight: 900;">KNIGHT</h3>
+                    <div class="price-display-core">
+                        <span class="old-strike">₹180</span>
+                        <span class="new-price-bold">99<small>INR</small></span>
+                    </div>
+                    <button class="action-button-nexus" onclick="triggerPurchaseGate()">Initialize</button>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="depot-card">
+                    <h3 style="font-family: 'Orbitron'; font-weight: 900;">LORD</h3>
+                    <div class="price-display-core">
+                        <span class="old-strike">₹453</span>
+                        <span class="new-price-bold">249<small>INR</small></span>
+                    </div>
+                    <button class="action-button-nexus" onclick="triggerPurchaseGate()">Initialize</button>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="depot-card">
+                    <h3 style="font-family: 'Orbitron'; font-weight: 900;">PALADIN</h3>
+                    <div class="price-display-core">
+                        <span class="old-strike">₹907</span>
+                        <span class="new-price-bold">499<small>INR</small></span>
+                    </div>
+                    <button class="action-button-nexus" onclick="triggerPurchaseGate()">Initialize</button>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="depot-card">
+                    <h3 style="font-family: 'Orbitron'; font-weight: 900;">DUKE</h3>
+                    <div class="price-display-core">
+                        <span class="old-strike">₹1,362</span>
+                        <span class="new-price-bold">749<small>INR</small></span>
+                    </div>
+                    <button class="action-button-nexus" onclick="triggerPurchaseGate()">Initialize</button>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="depot-card" style="border-color: var(--accent-purple);">
+                    <h3 style="font-family: 'Orbitron'; font-weight: 900; color: var(--accent-purple);">KING</h3>
+                    <div class="price-display-core">
+                        <span class="old-strike">₹1,816</span>
+                        <span class="new-price-bold" style="color: var(--accent-purple);">999<small>INR</small></span>
+                    </div>
+                    <button class="action-button-nexus" style="background: var(--accent-purple);" onclick="triggerPurchaseGate()">Initialize</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container py-5 mb-5" id="council">
+        <h2 class="section-header-nexus">THE COUNCIL</h2>
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <div class="depot-card">
+                    <h4 style="font-family: 'Orbitron';">Aayush</h4>
+                    <p class="mt-3" style="color: var(--main-cyan); letter-spacing: 5px;">FOUNDER</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="depot-card">
+                    <h4 style="font-family: 'Orbitron';">Hydra</h4>
+                    <p class="mt-3" style="color: var(--main-cyan); letter-spacing: 5px;">ARCHITECT</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="depot-card">
+                    <h4 style="font-family: 'Orbitron';">PVP_PRO</h4>
+                    <div class="mt-3" style="color: var(--main-cyan); letter-spacing: 5px;">GENERAL</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="depot-card">
+                    <h4 style="font-family: 'Orbitron';">Sitesizer</h4>
+                    <div class="mt-3" style="color: var(--main-cyan); letter-spacing: 5px;">ADMIN</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="purchaseGatewayModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background:#000; border:2px solid var(--main-cyan); color:#fff; border-radius:0;">
+                <div class="modal-body p-5 text-center">
+                    <h2 class="mb-5" style="font-family: 'Syncopate';">SELECT CHANNEL</h2>
+                    <div class="d-grid gap-4">
+                        <button class="action-button-nexus" onclick="window.open('https://demonsmp.craftingstore.net/')">AUTOMATED WEBSTORE</button>
+                        <button class="action-button-nexus" style="background:#5865F2; color:#fff;" onclick="window.open('https://discord.gg/dyAG4CS5bz')">DISCORD GATEWAY (UPI)</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</nav>
 
-<section class="hero">
-    <div class="hero-title-container">
-        <h1>Norden-<span>Mc</span></h1>
-    </div>
-    <div class="status-module">
-        <span class="pulse-core"></span>
-        <span id="player-status-text">INITIALIZING HUD...</span>
-    </div>
-    <div class="ip-interface" onclick="copySystemIP()">
-        PLAY.NORDENMC.FUN
-    </div>
-    <div class="mt-5 d-flex gap-4">
-        <a href="https://discord.gg/9sdyAeb7MV" target="_blank" class="nexus-btn px-5" style="width:auto; clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);">DISCORD ACCESS</a>
-        <a href="https://www.instagram.com/itadori_teacher001/" target="_blank" class="nexus-btn px-5" style="width:auto; clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%); background: linear-gradient(90deg, #E1306C, #F77737);">INSTAGRAM</a>
-    </div>
-</section>
-
-<section class="container py-5" id="vote">
-    <h2 class="section-header">VOTE PORTALS</h2>
-    <div class="row g-5">
-        <div class="col-md-4">
-            <div class="demon-card text-center">
-                <h3 style="font-family: var(--font-accent); letter-spacing: 5px;">GATEWAY ALPHA</h3>
-                <p class="small opacity-50 mt-3">MINECRAFT-MP DIRECTORY</p>
-                <div class="py-4">
-                    <i style="color:var(--main); font-size: 0.8rem;">// STATUS: ENCRYPTED //</i>
-                </div>
-                <button class="nexus-btn" onclick="window.open('https://minecraft-mp.com/server/355309/vote/')">VOTE NOW</button>
-            </div>
+    <div id="genesis-terminal-root">
+        <div class="terminal-top-bar">
+            <span>GENESIS_OS // VERSION_9.0.4</span>
+            <span onclick="toggleGenesisTerminal()" style="cursor:pointer">[X]</span>
         </div>
-        <div class="col-md-4">
-            <div class="demon-card text-center">
-                <h3 style="font-family: var(--font-accent); letter-spacing: 5px;">GATEWAY BETA</h3>
-                <p class="small opacity-50 mt-3">SERVER-LIST GLOBAL</p>
-                <div class="py-4">
-                    <i style="color:var(--main); font-size: 0.8rem;">// STATUS: SECURE //</i>
-                </div>
-                <button class="nexus-btn" onclick="window.open('https://minecraft-server-list.com/server/518471/vote/')">VOTE NOW</button>
+        <div class="terminal-scroll-area" id="terminal-log-stream">
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="demon-card text-center">
-                <h3 style="font-family: var(--font-accent); letter-spacing: 5px;">GATEWAY GAMMA</h3>
-                <p class="small opacity-50 mt-3">TOPG SYSTEM HUB</p>
-                <div class="py-4">
-                    <i style="color:var(--main); font-size: 0.8rem;">// STATUS: ACTIVE //</i>
-                </div>
-                <button class="nexus-btn" onclick="window.open('https://topg.org/minecraft-servers/server-680059-changeme#vote')">VOTE NOW</button>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="container py-5" id="shop">
-    <h2 class="section-header">SUPPLY DEPOT</h2>
-
-    <p class="text-center mb-5" style="letter-spacing: 8px; font-family: var(--font-accent); color: var(--main);">// CRATE KEY PROTOCOLS //</p>
-    <div class="row g-4 mb-5 justify-content-center">
-        <div class="col-lg-2 col-md-4 col-6">
-            <div class="demon-card text-center">
-                <div class="discount-badge">Save 45%</div>
-                <h3 style="font-size: 0.9rem; letter-spacing: 2px;">COMMON KEY</h3>
-                <div class="price-engine">
-                    <span class="old-price-reveal">₹18</span>
-                    <span class="current-price">10<small>INR</small></span>
-                </div>
-                <button class="nexus-btn" style="padding: 10px;" onclick="triggerPurchaseGate()">BUY</button>
-            </div>
-        </div>
-        <div class="col-lg-2 col-md-4 col-6">
-            <div class="demon-card text-center">
-                <div class="discount-badge">Save 45%</div>
-                <h3 style="font-size: 0.9rem; letter-spacing: 2px;">RARE KEY</h3>
-                <div class="price-engine">
-                    <span class="old-price-reveal">₹53</span>
-                    <span class="current-price">29<small>INR</small></span>
-                </div>
-                <button class="nexus-btn" style="padding: 10px;" onclick="triggerPurchaseGate()">BUY</button>
-            </div>
-        </div>
-        <div class="col-lg-2 col-md-4 col-6">
-            <div class="demon-card text-center">
-                <div class="discount-badge">Save 45%</div>
-                <h3 style="font-size: 0.9rem; letter-spacing: 2px;">SPECIAL KEY</h3>
-                <div class="price-engine">
-                    <span class="old-price-reveal">₹89</span>
-                    <span class="current-price">49<small>INR</small></span>
-                </div>
-                <button class="nexus-btn" style="padding: 10px;" onclick="triggerPurchaseGate()">BUY</button>
-            </div>
-        </div>
-        <div class="col-lg-2 col-md-4 col-6">
-            <div class="demon-card text-center">
-                <div class="discount-badge">Save 45%</div>
-                <h3 style="font-size: 0.9rem; letter-spacing: 2px;">EPIC KEY</h3>
-                <div class="price-engine">
-                    <span class="old-price-reveal">₹144</span>
-                    <span class="current-price">79<small>INR</small></span>
-                </div>
-                <button class="nexus-btn" style="padding: 10px;" onclick="triggerPurchaseGate()">BUY</button>
-            </div>
-        </div>
-        <div class="col-lg-2 col-md-4 col-12">
-            <div class="demon-card text-center">
-                <div class="discount-badge">Save 45%</div>
-                <h3 style="font-size: 0.9rem; letter-spacing: 2px;">SUPERIOR KEY</h3>
-                <div class="price-engine">
-                    <span class="old-price-reveal">₹180</span>
-                    <span class="current-price">99<small>INR</small></span>
-                </div>
-                <button class="nexus-btn" style="padding: 10px;" onclick="triggerPurchaseGate()">BUY</button>
-            </div>
+        <div class="terminal-input-row">
+            <span class="me-3">SYSTEM_ROOT#</span>
+            <input type="text" id="terminal-command-input" placeholder="Execute directive..." autocomplete="off">
         </div>
     </div>
 
-    <p class="text-center mb-5" style="letter-spacing: 8px; font-family: var(--font-accent); color: var(--main);">// RANK ELEVATION MODULES //</p>
-    <div class="row g-5 mb-5">
-        <div class="col-md-4">
-            <div class="demon-card text-center">
-                <div class="discount-badge">PROMO -45%</div>
-                <h3 style="letter-spacing: 5px;">KNIGHT</h3>
-                <p class="small opacity-50 mt-2">ESSENTIAL POWER-UP</p>
-                <div class="price-engine">
-                    <span class="old-price-reveal">₹180</span>
-                    <span class="current-price">99 <small>INR</small></span>
-                </div>
-                <button class="nexus-btn" onclick="triggerPurchaseGate()">INITIALIZE UPGRADE</button>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="demon-card text-center">
-                <div class="discount-badge">PROMO -45%</div>
-                <h3 style="letter-spacing: 5px;">LORD</h3>
-                <p class="small opacity-50 mt-2">NOBLE STATUS ACCESS</p>
-                <div class="price-engine">
-                    <span class="old-price-reveal">₹453</span>
-                    <span class="current-price">249 <small>INR</small></span>
-                </div>
-                <button class="nexus-btn" onclick="triggerPurchaseGate()">INITIALIZE UPGRADE</button>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="demon-card text-center">
-                <div class="discount-badge">PROMO -45%</div>
-                <h3 style="letter-spacing: 5px;">PALADIN</h3>
-                <p class="small opacity-50 mt-2">ELITE GUARDIAN STATUS</p>
-                <div class="price-engine">
-                    <span class="old-price-reveal">₹907</span>
-                    <span class="current-price">499 <small>INR</small></span>
-                </div>
-                <button class="nexus-btn" onclick="triggerPurchaseGate()">INITIALIZE UPGRADE</button>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="demon-card text-center">
-                <div class="discount-badge">PROMO -45%</div>
-                <h3 style="letter-spacing: 5px;">DUKE</h3>
-                <p class="small opacity-50 mt-2">HIGH-COMMAND PRIVILEGES</p>
-                <div class="price-engine">
-                    <span class="old-price-reveal">₹1,362</span>
-                    <span class="current-price">749 <small>INR</small></span>
-                </div>
-                <button class="nexus-btn" onclick="triggerPurchaseGate()">INITIALIZE UPGRADE</button>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="demon-card text-center">
-                <div class="discount-badge">PROMO -45%</div>
-                <h3 style="letter-spacing: 5px; color: var(--gold); text-shadow: 0 0 15px var(--gold);">KING</h3>
-                <p class="small opacity-50 mt-2">SUPREME AUTHORITY</p>
-                <div class="price-engine">
-                    <span class="old-price-reveal">₹1,816</span>
-                    <span class="current-price">999 <small>INR</small></span>
-                </div>
-                <button class="nexus-btn" style="background: linear-gradient(90deg, var(--gold), #fff, var(--gold));" onclick="triggerPurchaseGate()">CLAIM THRONE</button>
-            </div>
-        </div>
-    </div>
+    <div class="floating-nexus-orb" id="terminal-orb" onclick="toggleGenesisTerminal()">🛸</div>
+    <div class="theme-toggle-orb" id="theme-orb" onclick="switchSystemTheme()">🌌</div>
 
-    <p class="text-center mb-5" style="letter-spacing: 8px; font-family: var(--font-accent); color: var(--gold);">// SYSTEM COMPILATION BUNDLES //</p>
-    <div class="row g-5">
-        <div class="col-md-4">
-            <div class="demon-card text-center" style="border: 1px solid var(--main);">
-                <h3 style="font-size: 1.2rem;">KNIGHT BUNDLE</h3>
-                <ul class="list-unstyled mt-4 small opacity-75" style="text-align: left; padding-left: 20px;">
-                    <li>> 10x Common Crate Keys</li>
-                    <li>> Permanent Knight Rank</li>
-                    <li>> Exclusive Prefix</li>
-                </ul>
-                <div class="current-price mt-4">150 <small>INR</small></div>
-                <button class="nexus-btn mt-3" onclick="triggerPurchaseGate()">ACQUIRE BUNDLE</button>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="demon-card text-center" style="border: 1px solid var(--main);">
-                <h3 style="font-size: 1.2rem;">PALADIN BUNDLE</h3>
-                <ul class="list-unstyled mt-4 small opacity-75" style="text-align: left; padding-left: 20px;">
-                    <li>> 10x Special Crate Keys</li>
-                    <li>> Permanent Paladin Rank</li>
-                    <li>> Priority Access</li>
-                </ul>
-                <div class="current-price mt-4">850 <small>INR</small></div>
-                <button class="nexus-btn mt-3" onclick="triggerPurchaseGate()">ACQUIRE BUNDLE</button>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="demon-card text-center" style="border: 1px solid var(--gold);">
-                <h3 style="font-size: 1.2rem; color:var(--gold)">ROYAL BUNDLE</h3>
-                <ul class="list-unstyled mt-4 small opacity-75" style="text-align: left; padding-left: 20px;">
-                    <li>> 10x Superior Crate Keys</li>
-                    <li>> Permanent King Rank</li>
-                    <li>> All Global Boosters</li>
-                </ul>
-                <div class="current-price mt-4">1,500 <small>INR</small></div>
-                <button class="nexus-btn mt-3" style="background: var(--gold);" onclick="triggerPurchaseGate()">ACQUIRE BUNDLE</button>
-            </div>
-        </div>
-    </div>
-</section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<section class="container py-5 mb-5" id="council">
-    <h2 class="section-header">THE COUNCIL</h2>
-    <div class="row g-4 text-center">
-        <div class="col-lg-3 col-md-6">
-            <div class="demon-card">
-                <div style="font-size: 2rem;">👤</div>
-                <h3 class="mt-3">Aayush</h3>
-                <p class="fw-bold mt-2" style="color:var(--main); letter-spacing: 5px;">FOUNDER / OWNER</p>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6">
-            <div class="demon-card">
-                <div style="font-size: 2rem;">👤</div>
-                <h3 class="mt-3">Hydra</h3>
-                <p class="fw-bold mt-2" style="color:var(--main); letter-spacing: 5px;">CO-FOUNDER / OWNER</p>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6">
-            <div class="demon-card">
-                <div style="font-size: 2rem;">👤</div>
-                <h3 class="mt-3">PVP_PRO</h3>
-                <p class="fw-bold mt-2" style="color:var(--main); letter-spacing: 5px;">LEAD / OWNER</p>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6">
-            <div class="demon-card">
-                <div style="font-size: 2rem;">👤</div>
-                <h3 class="mt-3">Sitesizer</h3>
-                <p class="fw-bold mt-2" style="color:var(--main); letter-spacing: 5px;">ADMIN / OWNER</p>
-            </div>
-        </div>
-    </div>
-</section>
+    <script>
+        /**
+         * ========================================================
+         * CORE GENESIS ENGINE SCRIPTING
+         * ========================================================
+         */
+        
+        const NETWORK_IP = "play.nordenmc.fun";
+        const logStream = document.getElementById('terminal-log-stream');
+        const cmdInput = document.getElementById('terminal-command-input');
+        const terminalRoot = document.getElementById('genesis-terminal-root');
+        
+        // 1. NEURAL BOOT SEQUENCE (EXPANDED LOGS)
+        function runBootSequence() {
+            const bootLogs = [
+                "> INITIALIZING GENESIS CORE...",
+                "> LOADING NEURAL NETWORK ARCHITECTURE...",
+                "> ESTABLISHING CONNECTION TO play.nordenmc.fun",
+                "> HANDSHAKE PROTOCOL: SUCCESS",
+                "> ENCRYPTING DATABASE NODES...",
+                "> SCANNING FOR SYSTEM OWNER: UTKARSH PANDEY...",
+                "> OWNER RECOGNIZED. ACCESS GRANTED.",
+                "> LOADING DEPOT MODULES...",
+                "> SYNCING PLAYER DATA WITH MOJANG API...",
+                "> SECURITY LEVEL 9: ACTIVE",
+                "> READY FOR DIRECTIVES."
+            ];
 
-<div class="modal fade" id="nexusGateModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="background:rgba(2,2,10,0.98); border:3px solid var(--main); color:white; border-radius:0; backdrop-filter: blur(20px);">
-            <div class="modal-body p-5 text-center">
-                <h2 style="font-family:'Syncopate'; color:var(--main); letter-spacing: 5px;">SECURE CHANNEL</h2>
-                <div class="my-5" style="height: 2px; background: linear-gradient(90deg, transparent, var(--main), transparent);"></div>
-                <p class="mb-5 opacity-75" style="font-family: var(--font-accent);">SELECT DATA UPLOAD METHOD:</p>
-                <div class="d-grid gap-4">
-                    <button class="nexus-btn" onclick="window.open('https://demonsmp.craftingstore.net/')">AUTOMATED WEBSTORE</button>
-                    <button class="nexus-btn" style="background:#5865F2; color:white;" onclick="window.open('https://discord.gg/dyAG4CS5bz')">DISCORD MANUAL (UPI)</button>
-                </div>
-                <button class="btn btn-link text-white mt-4 opacity-50" data-bs-dismiss="modal">CLOSE CONNECTION</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="terminal-ui">
-    <div class="terminal-header">
-        <span>GENESIS_OS_4.9 // NEURAL_LINK</span>
-        <span id="system-status-badge">ONLINE</span>
-    </div>
-    <div class="terminal-body" id="terminal-log">
-        <div style="color:var(--main)">> [SYSTEM] ANALYZING NODE TOPOLOGY...</div>
-        <div style="color:var(--main)">> [SYSTEM] SECURITY HANDSHAKE VERIFIED.</div>
-        <div style="color:var(--gold)">> [NOTICE] STAFF RECRUITMENT OPEN. TYPE 'APPLY' TO START.</div>
-        <div style="color:var(--main)">> ----------------------------------------------------</div>
-    </div>
-    <div class="terminal-input-wrap">
-        <span style="color:var(--main); font-weight: 900;">#</span>
-        <input type="text" id="terminal-field" placeholder="INPUT DIRECTIVE..." autocomplete="off">
-    </div>
-</div>
-
-<div id="terminal-trigger" class="control-orb" onclick="toggleTerminal()">🛸</div>
-<div id="theme-switcher" class="control-orb" onclick="toggleThemeEngine()">🌌</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    const terminalLog = document.getElementById('terminal-log');
-    const terminalField = document.getElementById('terminal-field');
-    const terminalUI = document.getElementById('terminal-ui');
-    const SERVER_IP = "play.nordenmc.fun";
-    const WEBHOOK_URL = "https://discord.com/api/webhooks/1485289614997590153/4zO-djBpwYuBj1DEPT_-q-hFRfNWIHO6eIDKJ6mSlmD1djWIp-XVQxSCK5Q8lbpFG20b";
-
-    let activeRecruitment = false;
-    let recStep = 0;
-    let recData = { ign: "", age: "", dc: "", motivation: "" };
-
-    // PLAYER COUNT DATA FETCH
-    async function syncHUD() {
-        const hudText = document.getElementById('player-status-text');
-        const core = document.querySelector('.pulse-core');
-        try {
-            const response = await fetch(`https://api.mcstatus.io/v2/status/java/${SERVER_IP}`);
-            const result = await response.json();
-            if(result.online) {
-                hudText.innerHTML = `${result.players.online} / ${result.players.max} OPERATIVES CONNECTED`;
-                core.style.background = "#00ff00";
-                core.style.boxShadow = "0 0 25px #00ff00";
-            } else {
-                hudText.innerHTML = "SYSTEM OFFLINE // MAINTENANCE";
-                core.style.background = "#ff0000";
-                core.style.boxShadow = "0 0 25px #ff0000";
-            }
-        } catch(e) { hudText.innerHTML = "HUD SYNC ERROR"; }
-    }
-    syncHUD(); setInterval(syncHUD, 45000);
-
-    // TERMINAL INTERFACE LOGIC
-    function toggleTerminal() { 
-        terminalUI.style.display = (terminalUI.style.display === 'flex') ? 'none' : 'flex'; 
-        if(terminalUI.style.display === 'flex') terminalField.focus();
-    }
-
-    function pushTerminalLine(msg, color) {
-        const line = document.createElement('div');
-        line.style.color = color || "#fff";
-        line.style.marginBottom = "5px";
-        line.innerHTML = `> ${msg}`;
-        terminalLog.appendChild(line);
-        terminalLog.scrollTop = terminalLog.scrollHeight;
-    }
-
-    terminalField.addEventListener('keypress', async (event) => {
-        if(event.key === 'Enter') {
-            const raw = terminalField.value.trim();
-            if(!raw) return;
-            pushTerminalLine(raw.toUpperCase(), "#555");
-
-            if(activeRecruitment) {
-                if(recStep === 0) { recData.ign = raw; recStep++; pushTerminalLine("STEP 2: INPUT SUBJECT AGE?", "var(--gold)"); }
-                else if(recStep === 1) { recData.age = raw; recStep++; pushTerminalLine("STEP 3: INPUT DISCORD IDENTIFIER?", "var(--gold)"); }
-                else if(recStep === 2) { recData.dc = raw; recStep++; pushTerminalLine("STEP 4: STATE MOTIVATION FOR ENLISTMENT?", "var(--gold)"); }
-                else {
-                    recData.motivation = raw; activeRecruitment = false; recStep = 0;
-                    pushTerminalLine("UPLOADING DATA TO CENTRAL COUNCIL...", "var(--main)");
-                    try {
-                        await fetch(WEBHOOK_URL, {
-                            method: "POST",
-                            headers: {"Content-Type":"application/json"},
-                            body: JSON.stringify({
-                                embeds: [{
-                                    title: "⚔️ NEW STAFF CANDIDATE",
-                                    color: 0x00e5ff,
-                                    fields: [
-                                        { name: "IGN", value: recData.ign, inline: true },
-                                        { name: "AGE", value: recData.age, inline: true },
-                                        { name: "DISCORD", value: recData.dc, inline: true },
-                                        { name: "REASON", value: recData.motivation }
-                                    ],
-                                    timestamp: new Date()
-                                }]
-                            })
-                        });
-                        pushTerminalLine("DATA TRANSMITTED SUCCESSFULLY.", "#00ff00");
-                    } catch(e) { pushTerminalLine("ENCRYPTION ERROR: UPLOAD FAILED.", "red"); }
-                }
-            } else {
-                const command = raw.toLowerCase();
-                if(command === 'help') pushTerminalLine("AVAILABLE: APPLY, IP, SHOP, CLEAR, REBOOT, STATUS", "var(--main)");
-                else if(command === 'apply') { activeRecruitment = true; pushTerminalLine("RECRUITMENT SEQUENCE START. STEP 1: INPUT IGN?", "var(--main)"); }
-                else if(command === 'ip') pushTerminalLine("TARGET NODE: " + SERVER_IP, "var(--gold)");
-                else if(command === 'clear') terminalLog.innerHTML = "";
-                else if(command === 'status') pushTerminalLine("ALL CORE SYSTEMS OPERATIONAL.", "var(--main)");
-                else if(command === 'shop') { document.getElementById('shop').scrollIntoView(); toggleTerminal(); }
-                else if(command === 'reboot') { pushTerminalLine("REBOOTING INTERFACE...", "red"); setTimeout(() => location.reload(), 1000); }
-                else pushTerminalLine("UNRECOGNIZED DIRECTIVE.", "red");
-            }
-            terminalField.value = "";
-        }
-    });
-
-    // THEME & CANVAS ENGINE
-    let currentTheme = 'space';
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let starField = [];
-
-    function toggleThemeEngine() {
-        currentTheme = (currentTheme === 'space') ? 'nature' : 'space';
-        document.body.className = currentTheme + '-theme';
-        document.getElementById('theme-switcher').innerText = (currentTheme === 'space') ? '🌌' : '🌿';
-        document.getElementById('terminal-trigger').innerText = (currentTheme === 'space') ? '🛸' : '🦉';
-        initCanvas();
-    }
-
-    function initCanvas() {
-        canvas.width = window.innerWidth; 
-        canvas.height = window.innerHeight;
-        starField = [];
-        const density = (currentTheme === 'space') ? 150 : 60;
-        for(let i=0; i<density; i++) {
-            starField.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 2.5,
-                velocity: Math.random() * 0.8 + 0.1
+            bootLogs.forEach((msg, i) => {
+                setTimeout(() => {
+                    const line = document.createElement('div');
+                    line.innerText = msg;
+                    logStream.appendChild(line);
+                    logStream.scrollTop = logStream.scrollHeight;
+                }, i * 150);
             });
         }
-    }
+        runBootSequence();
 
-    function renderFrame() {
-        ctx.clearRect(0,0,canvas.width, canvas.height);
-        ctx.fillStyle = (currentTheme === 'space') ? '#00e5ff' : '#4cd137';
-        starField.forEach(s => {
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.size, 0, Math.PI*2);
-            ctx.fill();
-            s.y -= s.velocity;
-            if(s.y < 0) s.y = canvas.height;
+        // 2. SERVER STATUS UPDATER
+        async function refreshServerStatus() {
+            const display = document.getElementById('player-count-display');
+            try {
+                const response = await fetch(`https://api.mcstatus.io/v2/status/java/${NETWORK_IP}`);
+                const data = await response.json();
+                
+                if(data.online) {
+                    display.innerHTML = `<div class="status-dot"></div> ${data.players.online} / ${data.players.max} OPERATIVES ACTIVE`;
+                } else {
+                    display.innerHTML = `<div class="status-dot" style="background:#ff3e3e; box-shadow:0 0 15px #ff3e3e;"></div> NETWORK OFFLINE`;
+                }
+            } catch (err) {
+                display.innerText = "LINKAGE ERROR";
+            }
+        }
+        refreshServerStatus();
+        setInterval(refreshServerStatus, 45000);
+
+        // 3. TERMINAL LOGIC
+        function toggleGenesisTerminal() {
+            const isVisible = terminalRoot.style.display === 'flex';
+            terminalRoot.style.display = isVisible ? 'none' : 'flex';
+            if(!isVisible) cmdInput.focus();
+        }
+
+        cmdInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                const val = cmdInput.value.trim().toLowerCase();
+                const output = document.createElement('div');
+                output.style.color = "#fff";
+                output.innerText = `>> ${val.toUpperCase()}`;
+                logStream.appendChild(output);
+
+                const response = document.createElement('div');
+                if(val === 'help') {
+                    response.innerText = "> AVAILABLE DIRECTIVES: IP, STATUS, SHOP, CLEAR, REBOOT";
+                } else if(val === 'ip') {
+                    response.innerText = `> TARGET NODE: ${NETWORK_IP}`;
+                } else if(val === 'clear') {
+                    logStream.innerHTML = "";
+                } else if(val === 'status') {
+                    response.innerText = "> SYSTEM INTEGRITY: 99.9% | UPTIME: 2478 HOURS";
+                } else {
+                    response.innerText = "> UNKNOWN DIRECTIVE. TYPE 'HELP' FOR GUIDANCE.";
+                }
+                
+                logStream.appendChild(response);
+                cmdInput.value = "";
+                logStream.scrollTop = logStream.scrollHeight;
+            }
         });
-        requestAnimationFrame(renderFrame);
-    }
 
-    window.onresize = initCanvas;
-    initCanvas();
-    renderFrame();
+        // 4. THEME ENGINE
+        let currentTheme = 'space';
+        function switchSystemTheme() {
+            const body = document.body;
+            const orb = document.getElementById('theme-orb');
+            
+            if(currentTheme === 'space') {
+                currentTheme = 'nature';
+                body.className = 'nature-theme';
+                orb.innerText = '🌿';
+            } else {
+                currentTheme = 'space';
+                body.className = 'space-nexus';
+                orb.innerText = '🌌';
+            }
+            initCanvas(); // Redraw particles for theme color shift
+        }
 
-    function triggerPurchaseGate() { new bootstrap.Modal(document.getElementById('nexusGateModal')).show(); }
-    function copySystemIP() {
-        navigator.clipboard.writeText(SERVER_IP);
-        const box = document.querySelector('.ip-interface');
-        const old = box.innerHTML;
-        box.innerHTML = "LINK COPIED TO CLIPBOARD";
-        setTimeout(() => box.innerHTML = old, 2000);
-    }
-</script>
+        // 5. CANVAS PARTICLE ENGINE (EXPANDED)
+        const canvas = document.getElementById('genesis-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            const count = (currentTheme === 'space') ? 200 : 80;
+            
+            for(let i=0; i<count; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2.5,
+                    vx: Math.random() * 0.5 - 0.25,
+                    vy: Math.random() * 0.5 - 0.25,
+                    alpha: Math.random()
+                });
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const activeColor = getComputedStyle(document.body).getPropertyValue('--main-cyan');
+            
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = activeColor;
+                ctx.globalAlpha = p.alpha;
+                ctx.fill();
+                
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        // 6. UTILITY FUNCTIONS
+        function copyNetworkIP() {
+            navigator.clipboard.writeText(NETWORK_IP);
+            alert("NETWORK ADDRESS COPIED TO NEURAL LINK.");
+        }
+
+        function triggerPurchaseGate() {
+            new bootstrap.Modal(document.getElementById('purchaseGatewayModal')).show();
+        }
+
+        window.onresize = initCanvas;
+        initCanvas();
+        animateParticles();
+
+    </script>
 </body>
 </html>
